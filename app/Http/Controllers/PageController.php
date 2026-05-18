@@ -6,6 +6,7 @@ use App\Models\News;
 use Illuminate\Http\Request;
 use App\Models\Pengelola;
 use App\Models\Umkm;
+use App\Models\Attraction;
 
 class PageController extends Controller
 {
@@ -41,14 +42,18 @@ class PageController extends Controller
         return view('pages.umkm-detail', compact('umkm'));
     }
 
-    public function atraksi()
+       public function atraksi()
     {
-        return view('pages.atraksi');
+        $attractions = Attraction::latest()->get();
+
+        return view('pages.atraksi', compact('attractions'));
     }
 
-    public function atraksiDetail()
+    public function atraksiDetail($slug)
     {
-        return view('pages.atraksi-detail');
+        $attraction = Attraction::where('slug', $slug)->firstOrFail();
+
+        return view('pages.atraksi-detail', compact('attraction'));
     }
 
     public function berita(Request $request)

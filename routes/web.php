@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\AttractionControllers;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\UmkmController;
@@ -22,8 +23,10 @@ Route::get('/berita/{slug}', [HomeController::class, 'showNews'])->name('news.sh
 Route::get('/umkm', [PageController::class, 'umkm'])->name('pages.umkm');
 Route::get('/umkm/{id}', [PageController::class, 'umkmDetail'])->name('pages.umkm-detail');
 
-Route::get('/atraksi', [PageController::class, 'atraksi'])->name('pages.atraksi');
-Route::get('/atraksi/dummy-detail', [PageController::class, 'atraksiDetail'])->name('pages.atraksi-detail');
+Route::get('/atraksi', [PageController::class, 'atraksi'])
+    ->name('pages.atraksi');
+Route::get('/atraksi/{slug}', [PageController::class, 'atraksiDetail'])
+    ->name('pages.atraksi-detail');
 
 Route::get('/berita-acara', [PageController::class, 'berita'])->name('pages.berita');
 Route::get('/berita-acara/{slug}', [PageController::class, 'beritaDetail'])->name('pages.berita-detail');
@@ -39,7 +42,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 
 Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
 
-// Route::group(['middleware' => ['auth', 'role:Admin']], function(){
+Route::group(['middleware' => ['auth', 'role:Admin']], function(){
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::resource('news', NewsController::class);
@@ -60,6 +63,17 @@ Route::post('/booking', [BookingController::class, 'store'])->name('booking.stor
             return view('admin.profile.edit');
         })->name('profile.edit');
     });
-// });
+});
 
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware(['auth', 'role:Admin'])
+    ->group(function () {
+
+        Route::resource(
+            'attractions',
+            AttractionController::class
+        );
+
+    });
 

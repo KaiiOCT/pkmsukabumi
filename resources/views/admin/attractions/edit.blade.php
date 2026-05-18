@@ -11,7 +11,7 @@
         </a>
     </div>
 
-    <form action="#" method="POST" enctype="multipart/form-data" class="w-full mx-auto">
+    <form action="{{ route('admin.attractions.update', $attraction->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         
@@ -23,32 +23,30 @@
                 
                 <div class="mb-6">
                     <label class="block text-sm font-bold text-brand-text dark:text-white mb-2">Nama Atraksi / Destinasi <span class="text-rose-500">*</span></label>
-                    <input type="text" name="name" required value="Vihara Widhi Sakti" 
+                    <input type="text" name="name" required value="{{ $attraction->name }}"
                         class="w-full px-4 py-3.5 text-lg font-semibold rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent/20">
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <div class="md:col-span-2">
                         <label class="block text-sm font-bold text-brand-text dark:text-white mb-2">Deskripsi Singkat (Sub-judul) <span class="text-rose-500">*</span></label>
-                        <textarea name="excerpt" rows="2" required 
-                            class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent/20 custom-scrollbar">Pusat ibadah dan cagar budaya dengan arsitektur perpaduan Tiongkok klasik di Kampoeng Naga.</textarea>
+                        <textarea name="excerpt" required>{{ $attraction->excerpt }}</textarea>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-brand-text dark:text-white mb-2">Label Lokasi Singkat</label>
-                        <input type="text" name="location_label" value="Jl. Pajagalan, Sukabumi" 
+                        <input type="text" name="location_label" value="{{ $attraction->location_label }}"
                             class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent/20">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-brand-text dark:text-white mb-2">Label Spesial (Opsional)</label>
-                        <input type="text" name="special_badge" value="Cagar Budaya" 
+                        <input type="text" name="special_badge" value="{{ $attraction->special_badge }}"
                             class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent/20">
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-sm font-bold text-brand-text dark:text-white mb-2">Deskripsi Lengkap (Menjelajah Lebih Dalam) <span class="text-rose-500">*</span></label>
-                    <textarea name="description" rows="8" required 
-                        class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent/20 custom-scrollbar">Vihara Widhi Sakti merupakan salah satu ikon cagar budaya dan tempat ibadah tertua yang ada di kawasan Odeon. Dibangun dengan arsitektur perpaduan Tiongkok klasik dan sentuhan lokal, vihara ini menjadi pusat perayaan hari-hari besar dan simbol toleransi di Kampoeng Naga.</textarea>
+                        <textarea name="description" required>{{ $attraction->description }}</textarea>
                 </div>
             </div>
 
@@ -60,13 +58,43 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <div>
-                        <label class="block text-sm font-bold text-brand-text dark:text-white mb-2">Kategori Atraksi</label>
-                        <input type="text" name="category" value="Sejarah & Religi" 
-                            class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent/20">
+                        <label class="block text-sm font-bold text-brand-text dark:text-white mb-2">
+                            Kategori Atraksi
+                        </label>
+
+                        <select
+                            name="category"
+                            required
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent/20"
+                        >
+
+                            <option value="">Pilih Kategori</option>
+
+                            <option value="Ikonik"
+                                {{ $attraction->category == 'Ikonik' ? 'selected' : '' }}>
+                                Ikonik
+                            </option>
+
+                            <option value="Religi & Budaya"
+                                {{ $attraction->category == 'Religi & Budaya' ? 'selected' : '' }}>
+                                Religi & Budaya
+                            </option>
+
+                            <option value="Hiburan & Acara"
+                                {{ $attraction->category == 'Hiburan & Acara' ? 'selected' : '' }}>
+                                Hiburan & Acara
+                            </option>
+
+                            <option value="Suasana Lokal"
+                                {{ $attraction->category == 'Suasana Lokal' ? 'selected' : '' }}>
+                                Suasana Lokal
+                            </option>
+
+                        </select>
                     </div>
                     <div class="md:col-span-2">
                         <label class="block text-sm font-bold text-brand-text dark:text-white mb-2">Rentang Hari Operasional</label>
-                        <input type="text" name="operational_days" value="Setiap Hari" 
+                        <input type="text" name="operational_days" value="{{ $attraction->operational_days }}"
                             class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent/20">
                     </div>
                     <div>
@@ -75,7 +103,7 @@
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                 <i class="iconoir-clock text-emerald-500 text-lg"></i>
                             </div>
-                            <input type="text" name="open_time" value="08:00" 
+                            <input type="text" name="open_time" value="{{ $attraction->open_time }}"
                                 class="time-picker w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-emerald-500/20 cursor-pointer bg-white">
                         </div>
                     </div>
@@ -85,13 +113,13 @@
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                 <i class="iconoir-clock text-rose-500 text-lg"></i>
                             </div>
-                            <input type="text" name="close_time" value="17:00" 
+                            <input type="text" name="close_time" value="{{ $attraction->close_time }}"
                                 class="time-picker w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-rose-500/20 cursor-pointer bg-white">
                         </div>
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-brand-text dark:text-white mb-2">Tiket Masuk</label>
-                        <input type="text" name="ticket_price" value="Gratis" 
+                        <input type="text" name="ticket_price" value="{{ $attraction->ticket_price }}" 
                             class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent/20">
                     </div>
                 </div>
@@ -99,7 +127,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-bold text-brand-text dark:text-white mb-2">Fasilitas Tersedia</label>
-                        <input type="text" name="facilities" value="Area Parkir, Tempat Ibadah, Spot Foto" 
+                        <input type="text" name="facilities" value="{{ $attraction->facilities }}"
                             class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent/20">
                         <p class="text-[10px] text-brand-muted mt-2">Gunakan tanda koma ( , ) untuk memisahkan antar fasilitas.</p>
                     </div>

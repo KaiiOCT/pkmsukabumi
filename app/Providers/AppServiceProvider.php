@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
+use App\Models\Booking;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,9 +22,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // if (config('app.env') === 'local') {
-        //     URL::forceScheme('https');
-        // }
+        View::composer('*', function ($view) {
+
+            $pendingBookings = Booking::where('status', 'pending')->count();
+
+            $view->with('pendingBookings', $pendingBookings);
+        });
     }
 
 

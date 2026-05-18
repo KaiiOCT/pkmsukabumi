@@ -34,42 +34,145 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50 dark:divide-white/5">
-                    <tr class="group hover:bg-gray-50/80 dark:hover:bg-white/5 transition-colors">
-                        <td class="px-6 py-4 text-sm font-semibold text-brand-muted dark:text-white/50 text-center">1</td>
 
-                        <td class="px-6 py-4">
-                            <p class="text-sm font-bold text-brand-text dark:text-white">Vihara Widhi Sakti</p>
-                        </td>
+                    @forelse($attractions as $item)
 
-                        <td class="px-6 py-4">
-                            <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-rose-50 dark:bg-brand-accent/10 text-brand-accent dark:text-brand-gold text-[10px] font-bold uppercase tracking-wider border border-rose-100 dark:border-brand-accent/20">Sejarah & Religi</span>
-                        </td>
+                        <tr class="group hover:bg-gray-50/80 dark:hover:bg-white/5 transition-colors">
 
-                        <td class="px-6 py-4">
-                            <p class="text-sm font-bold text-brand-text dark:text-white">08:00 - 17:00</p>
-                            <p class="text-[10px] text-brand-muted dark:text-white/50 mt-0.5">Setiap Hari</p>
-                        </td>
+                            {{-- NOMOR --}}
+                            <td class="px-6 py-4 text-sm font-semibold text-brand-muted dark:text-white/50 text-center">
+                                {{ $loop->iteration }}
+                            </td>
 
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center gap-2">
-                                <button type="button" onclick="openDetailModal()" class="w-8 h-8 rounded-lg flex items-center justify-center bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-600 hover:text-white transition-colors tooltip-trigger outline-none border-none cursor-pointer" title="Lihat Detail">
-                                    <i class="iconoir-eye text-sm"></i>
-                                </button>
-                                <a href="{{ route('admin.attractions.edit', 1) }}" class="w-8 h-8 rounded-lg flex items-center justify-center bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-blue-600 hover:text-white transition-colors tooltip-trigger outline-none border-none cursor-pointer" title="Edit">
-                                    <i class="iconoir-edit-pencil text-sm"></i>
-                                </a>
-                                <button type="button" onclick="openDeleteModal()" class="w-8 h-8 rounded-lg flex items-center justify-center bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-600 hover:text-white transition-colors tooltip-trigger outline-none border-none cursor-pointer" title="Hapus">
-                                    <i class="iconoir-trash text-sm"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
+                            {{-- NAMA ATRAKSI --}}
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+
+                                    <img
+                                        src="{{ asset('storage/' . $item->main_image) }}"
+                                        class="w-14 h-14 rounded-xl object-cover"
+                                    >
+
+                                    <div>
+                                        <p class="text-sm font-bold text-brand-text dark:text-white">
+                                            {{ $item->name }}
+                                        </p>
+
+                                        <p class="text-[10px] text-brand-muted">
+                                            {{ $item->location_label }}
+                                        </p>
+                                    </div>
+
+                                </div>
+                            </td>
+
+                            {{-- KATEGORI --}}
+                            <td class="px-6 py-4">
+
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-rose-50 dark:bg-brand-accent/10 text-brand-accent dark:text-brand-gold text-[10px] font-bold uppercase tracking-wider border border-rose-100 dark:border-brand-accent/20">
+
+                                    {{ $item->category }}
+
+                                </span>
+
+                            </td>
+
+                            {{-- JAM --}}
+                            <td class="px-6 py-4">
+
+                                <p class="text-sm font-bold text-brand-text dark:text-white">
+
+                                    {{ $item->open_time }}
+                                    -
+                                    {{ $item->close_time }}
+
+                                </p>
+
+                                <p class="text-[10px] text-brand-muted dark:text-white/50 mt-0.5">
+
+                                    {{ $item->operational_days }}
+
+                                </p>
+
+                            </td>
+
+                            {{-- AKSI --}}
+                            <td class="px-6 py-4">
+
+                                <div class="flex items-center justify-center gap-2">
+
+                                    {{-- DETAIL --}}
+                                    <button
+                                        type="button"
+                                        onclick="openDetailModal(
+                                            @js($item->name),
+                                            @js($item->location_label),
+                                            @js($item->category),
+                                            @js(asset('storage/' . $item->main_image)),
+                                            @js($item->description),
+                                            @js($item->open_time),
+                                            @js($item->close_time),
+                                            @js($item->ticket_price),
+                                            @js($item->operational_days),
+                                        )"
+                                        class="w-8 h-8 rounded-lg flex items-center justify-center bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600"
+                                    >
+                                        <i class="iconoir-eye text-sm"></i>
+                                    </button>
+
+                                    {{-- EDIT --}}
+                                    <a
+                                        href="{{ route('admin.attractions.edit', $item->id) }}"
+                                        class="w-8 h-8 rounded-lg flex items-center justify-center bg-blue-50 dark:bg-blue-500/10 text-blue-600"
+                                    >
+                                        <i class="iconoir-edit-pencil text-sm"></i>
+                                    </a>
+
+                                    {{-- DELETE --}}
+                                    <form
+                                        action="{{ route('admin.attractions.destroy', $item->id) }}"
+                                        method="POST"
+                                    >
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button
+                                            type="submit"
+                                            class="w-8 h-8 rounded-lg flex items-center justify-center bg-rose-50 dark:bg-rose-500/10 text-rose-600"
+                                        >
+                                            <i class="iconoir-trash text-sm"></i>
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    @empty
+
+                        <tr>
+
+                            <td colspan="5" class="text-center py-10 text-brand-muted">
+
+                                Belum ada data atraksi
+
+                            </td>
+
+                        </tr>
+
+                    @endforelse
+
                 </tbody>
             </table>
         </div>
         
         <div class="p-6 border-t border-gray-100 dark:border-white/5 flex items-center justify-between">
-            <p class="text-xs text-brand-muted dark:text-white/50 font-medium">Menampilkan <span class="font-bold text-brand-text dark:text-white">1</span> atraksi</p>
+            <p class="text-xs text-brand-muted dark:text-white/50 font-medium">Menampilkan <span class="font-bold text-brand-text dark:text-white">
+            {{ $attractions->count() }}
+            </span> atraksi</p>
         </div>
     </div>
 
@@ -79,7 +182,7 @@
         <div id="detailModalCard" class="relative w-full max-w-2xl bg-white dark:bg-[#1E1212] rounded-[2rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] transform scale-95 transition-transform duration-300">
 
             <div class="relative w-full h-48 sm:h-56 shrink-0">
-                <img src="{{ asset('assets/vihara.jpeg') }}" alt="Cover" class="w-full h-full object-cover">
+                <img id="modalImage" src="" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/90 via-brand-dark/40 to-transparent"></div>
 
                 <button onclick="closeModal('detailModal')" class="absolute top-4 right-4 w-8 h-8 bg-black/20 hover:bg-rose-500 backdrop-blur-md rounded-full flex items-center justify-center text-white transition-colors outline-none border-none cursor-pointer z-10">
@@ -88,30 +191,27 @@
 
                 <div class="absolute bottom-6 left-6 right-6">
                     <div class="flex gap-2 mb-2">
-                        <span class="px-2 py-0.5 rounded-md bg-white/20 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider border border-white/20">Sejarah & Religi</span>
-                        <span class="px-2 py-0.5 rounded-md bg-brand-accent/80 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider">Cagar Budaya</span>
+                        <span id="modalCategory"></span>
                     </div>
-                    <h3 class="text-2xl sm:text-3xl font-bold text-white leading-tight font-serif mb-1">Vihara Widhi Sakti</h3>
-                    <p class="text-xs text-white/80 flex items-center gap-1"><i class="iconoir-map-pin text-[10px]"></i> Jl. Pajagalan, Sukabumi</p>
+                    <h3 id="modalTitle" class="text-2xl sm:text-3xl font-bold text-white"></h3>
+                    <p id="modalLocation" class="text-xs text-white/80"></p>
                 </div>
             </div>
 
             <div class="p-6 sm:p-8 overflow-y-auto custom-scrollbar flex-1 space-y-6 bg-gray-50/30 dark:bg-transparent">
                 <div>
                     <h4 class="text-[10px] font-extrabold uppercase tracking-widest text-brand-muted mb-2 border-b border-gray-200 dark:border-white/10 pb-2">Deskripsi Atraksi</h4>
-                    <p class="text-sm font-bold text-brand-text dark:text-white mb-2">Pusat ibadah dan cagar budaya dengan arsitektur perpaduan Tiongkok klasik di Kampoeng Naga.</p>
-                    <p class="text-xs text-gray-600 dark:text-white/60 leading-relaxed">Vihara Widhi Sakti merupakan salah satu ikon cagar budaya dan tempat ibadah tertua yang ada di kawasan Odeon. Dibangun dengan arsitektur perpaduan Tiongkok klasik dan sentuhan lokal, vihara ini menjadi pusat perayaan hari-hari besar dan simbol toleransi di Kampoeng Naga.</p>
+                    <p id="modalDescription" class="text-sm font-bold text-brand-text dark:text-white mb-2"></p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-white dark:bg-[#1A0E0E] p-4 rounded-xl border border-gray-100 dark:border-white/5">
                         <h4 class="text-[10px] font-extrabold uppercase tracking-widest text-brand-muted mb-1">Jam Operasional</h4>
-                        <p class="text-sm font-bold text-brand-text dark:text-white flex items-center gap-1.5"><i class="iconoir-clock text-emerald-500"></i> 08:00 - 17:00</p>
-                        <p class="text-[10px] text-gray-500 dark:text-white/40 mt-0.5">Setiap Hari</p>
+                        <p id="modalTime" class="text-sm font-bold text-brand-text dark:text-white flex items-center gap-1.5"></p>
                     </div>
                     <div class="bg-white dark:bg-[#1A0E0E] p-4 rounded-xl border border-gray-100 dark:border-white/5">
                         <h4 class="text-[10px] font-extrabold uppercase tracking-widest text-brand-muted mb-1">Tiket Masuk</h4>
-                        <p class="text-sm font-bold text-brand-text dark:text-white flex items-center gap-1.5"><i class="iconoir-dollar text-brand-accent dark:text-brand-gold"></i> Gratis</p>
+                        <p id="modalDays" class="text-[10px] text-gray-500 dark:text-white/40 mt-0.5"></p>
                     </div>
                 </div>
 
@@ -119,6 +219,7 @@
                     <h4 class="text-[10px] font-extrabold uppercase tracking-widest text-brand-muted mb-1">Fasilitas Tersedia</h4>
                     <p class="text-sm font-bold text-brand-text dark:text-white">Area Parkir, Tempat Ibadah, Spot Foto</p>
                 </div>
+
             </div>
         </div>
     </div>
@@ -146,16 +247,44 @@
     </div>
 
     <script>
-        function openDetailModal() {
-            const modal = document.getElementById('detailModal');
-            const card = document.getElementById('detailModalCard');
-            
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.remove('opacity-0');
-                card.classList.replace('scale-95', 'scale-100');
-            }, 10);
-        }
+    function openDetailModal(
+        name,
+        location,
+        category,
+        image,
+        description,
+        openTime,
+        closeTime,
+        days
+    ) {
+        const modal = document.getElementById('detailModal');
+        const card = document.getElementById('detailModalCard');
+
+        // isi data modal
+        document.getElementById('modalTitle').innerText = name;
+        document.getElementById('modalLocation').innerText = location;
+        document.getElementById('modalImage').src = image;
+
+        // category (biar keliatan rapi)
+        document.getElementById('modalCategory').innerHTML =
+            `<span class="px-2 py-1 rounded-md bg-white/20 text-white text-[10px] font-bold uppercase">${category}</span>`;
+
+        // nanti kita pakai 1 blok deskripsi aja (biar gak dobel)
+        document.getElementById('modalDescription').innerText = description;
+
+        document.getElementById('modalTime').innerText =
+            openTime + ' - ' + closeTime;
+
+        document.getElementById('modalDays').innerText = days;
+
+        // show modal
+        modal.classList.remove('hidden');
+
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+            card.classList.replace('scale-95', 'scale-100');
+        }, 10);
+    }
 
         function openDeleteModal() {
             const modal = document.getElementById('deleteModal');

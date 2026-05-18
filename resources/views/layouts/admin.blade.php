@@ -74,11 +74,19 @@
 
             <a href="{{ route('admin.bookings.index') }}"
                 class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.bookings.*') ? 'bg-brand-accent text-white shadow-md shadow-brand-accent/20' : 'text-gray-600 dark:text-white/70 hover:bg-gray-50 dark:hover:bg-white/5 hover:text-brand-accent dark:hover:text-brand-gold' }}">
+
                 <i class="iconoir-shopping-bag text-lg"></i>
+
                 Manajemen Pesanan
+
                 <span
-                    class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full {{ request()->routeIs('admin.bookings.*') ? 'bg-white text-brand-accent dark:bg-brand-dark dark:text-brand-gold shadow-sm' : 'bg-rose-500 text-white' }}">
-                    3
+                    class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full
+                    {{ request()->routeIs('admin.bookings.*')
+                        ? 'bg-white text-brand-accent dark:bg-brand-dark dark:text-brand-gold shadow-sm'
+                        : 'bg-rose-500 text-white' }}">
+
+                    {{ $pendingBookings }}
+
                 </span>
             </a>
 

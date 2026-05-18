@@ -49,23 +49,29 @@
 
             <div class="flex flex-col md:flex-row items-center justify-between gap-5 reveal">
 
-                <div class="flex flex-wrap gap-2 justify-center md:justify-start" id="atraksi-filters">
-                    <button class="filter-pill active" data-target="all">
-                        <i class="iconoir-grid-plus text-sm"></i> Semua
-                    </button>
-                    <button class="filter-pill" data-target="ikonik">
-                        Ikonik
-                    </button>
-                    <button class="filter-pill" data-target="budaya">
-                        Religi &amp; Budaya
-                    </button>
-                    <button class="filter-pill" data-target="hiburan">
-                        Hiburan &amp; Acara
-                    </button>
-                    <button class="filter-pill" data-target="lokal">
-                        Suasana Lokal
-                    </button>
-                </div>
+            <div class="flex flex-wrap gap-2 justify-center md:justify-start" id="atraksi-filters">
+
+                <button class="filter-pill active" data-target="all">
+                    <i class="iconoir-grid-plus text-sm"></i> Semua
+                </button>
+
+                <button class="filter-pill" data-target="Ikonik">
+                    Ikonik
+                </button>
+
+                <button class="filter-pill" data-target="Religi & Budaya">
+                    Religi &amp; Budaya
+                </button>
+
+                <button class="filter-pill" data-target="Hiburan & Acara">
+                    Hiburan &amp; Acara
+                </button>
+
+                <button class="filter-pill" data-target="Suasana Lokal">
+                    Suasana Lokal
+                </button>
+
+            </div>
 
                 <div class="relative w-full md:w-80 shrink-0">
                     <input type="text" id="search-input" placeholder="Cari atraksi atau kata kunci..."
@@ -150,59 +156,71 @@
                     ];
                 @endphp
 
-                @foreach ($atraksi as $a)
-                    <article class="atraksi-item card group flex flex-col cursor-pointer reveal"
-                        data-category="{{ $a['category'] }}" data-title="{{ $a['search'] }}">
+            @foreach ($attractions as $a)
+                <article class="atraksi-item card group flex flex-col cursor-pointer reveal"
+                    data-category="{{ trim($a->category) }}"
+                    data-title="{{ strtolower($a->name . ' ' . $a->description) }}">
 
-                        <div class="card-image h-60">
-                            <img src="{{ Str::startsWith($a['image'], 'http') ? $a['image'] : asset($a['image']) }}"
-                                alt="{{ $a['title'] }}"
-                                onerror="this.src='https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=600'">
-                            <div class="absolute inset-0 bg-gradient-card pointer-events-none"></div>
+                    <div class="card-image h-60">
+                        <img src="{{ asset('storage/' . $a->main_image) }}"
+                            alt="{{ $a->name }}"
+                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            onerror="this.src='https://placehold.co/600x400?text=No+Image'">
 
-                            <div class="absolute top-3 left-3">
-                                <span class="badge badge-white text-[10px]">{{ $a['badge'] }}</span>
-                            </div>
+                        <div class="absolute inset-0 bg-gradient-card pointer-events-none"></div>
 
-                            <div
-                                class="absolute inset-0 flex items-end p-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <a href="{{ route('pages.atraksi-detail') }}"
-                                    class="w-full text-center py-3 rounded-xl bg-white/90 backdrop-blur-sm
-                                  text-brand-accent text-sm font-bold no-underline
-                                  hover:bg-white transition-colors duration-200">
-                                    Lihat Detail
-                                </a>
-                            </div>
+                        <div class="absolute top-3 left-3">
+                            <span class="badge badge-white text-[10px]">
+                                {{ $a->category }}
+                            </span>
                         </div>
 
-                        <div class="card-body flex flex-col flex-1">
-                            <h3
-                                class="font-serif text-xl font-bold text-brand-text group-hover:text-brand-accent
-                               transition-colors duration-300 mb-2.5 mt-0 leading-snug">
-                                <a href="{{ route('pages.atraksi-detail') }}"
-                                    class="no-underline text-inherit">{{ $a['title'] }}</a>
-                            </h3>
-                            <p class="text-sm text-brand-muted leading-relaxed mb-5 flex-1 line-clamp-3">
-                                {{ $a['desc'] }}
-                            </p>
-                            <div class="mt-auto flex items-center justify-between border-t border-gray-100 dark:border-white/5 pt-4">
-                                
-                                <a href="{{ route('pages.atraksi-detail') }}"
-                                    class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-accent
-                                  no-underline hover:gap-3 transition-all duration-300 group/link">
-                                    Selengkapnya
-                                    <i class="iconoir-arrow-right group-hover/link:translate-x-1 transition-transform duration-300"></i>
-                                </a>
+                        <div
+                            class="absolute inset-0 flex items-end p-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
 
-                                <div class="flex items-center gap-1.5" title="Jumlah orang yang menyukai atraksi ini">
-                                    <i class="iconoir-heart-solid text-rose-500 text-lg"></i>
-                                    <span class="text-xs font-bold text-gray-600 dark:text-white/70">{{ rand(120, 999) }}</span>
-                                </div>
-                                
+                            <a href="{{ route('pages.atraksi-detail', $a->slug) }}"
+                                class="w-full text-center py-3 rounded-xl bg-white/90 backdrop-blur-sm
+                                text-brand-accent text-sm font-bold no-underline
+                                hover:bg-white transition-colors duration-200">
+
+                                Lihat Detail
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="card-body flex flex-col flex-1">
+                        <h3 class="font-serif text-xl font-bold text-brand-text mb-2.5 mt-0 leading-snug">
+
+                            <a href="{{ route('pages.atraksi-detail', $a->slug) }}"
+                                class="no-underline text-inherit">
+
+                                {{ $a->name}}
+                            </a>
+                        </h3>
+
+                        <p class="text-sm text-brand-muted leading-relaxed mb-5 flex-1 line-clamp-3">
+                            {{ $a->description }}
+                        </p>
+
+                        <div class="mt-auto flex items-center justify-between border-t border-gray-100 pt-4">
+
+                            <a href="{{ route('pages.atraksi-detail', $a->slug) }}"
+                                class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-accent no-underline">
+
+                                Selengkapnya
+                            </a>
+
+                            <div class="flex items-center gap-1.5">
+                                <i class="iconoir-heart-solid text-rose-500 text-lg"></i>
+
+                                <span class="text-xs font-bold text-gray-600">
+                                    {{ rand(120, 999) }}
+                                </span>
                             </div>
                         </div>
-                    </article>
-                @endforeach
+                    </div>
+                </article>
+            @endforeach
 
             </div>
 
@@ -309,66 +327,89 @@
 
     @push('scripts')
         <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const filterBtns = document.querySelectorAll('#atraksi-filters .filter-pill');
-                const items = document.querySelectorAll('.atraksi-item');
-                const searchEl = document.getElementById('search-input');
-                const clearBtn = document.getElementById('clear-search');
-                const noResult = document.getElementById('no-result');
-                let currentFilter = 'all';
-                let currentSearch = '';
+        document.addEventListener('DOMContentLoaded', () => {
 
-                function updateDisplay() {
-                    let found = false;
-                    items.forEach(item => {
-                        const catMatch = currentFilter === 'all' || item.dataset.category === currentFilter;
-                        const searchMatch = item.dataset.title.toLowerCase().includes(currentSearch);
-                        if (catMatch && searchMatch) {
-                            item.style.display = 'flex';
-                            found = true;
-                            requestAnimationFrame(() => {
-                                item.style.opacity = '1';
-                                item.style.transform = '';
-                            });
-                        } else {
-                            item.style.opacity = '0';
-                            setTimeout(() => {
-                                item.style.display = 'none';
-                            }, 200);
-                        }
-                    });
-                    setTimeout(() => noResult.classList.toggle('hidden', found), 220);
-                }
+            const filterBtns = document.querySelectorAll('#atraksi-filters .filter-pill');
+            const items = document.querySelectorAll('.atraksi-item');
+            const searchEl = document.getElementById('search-input');
+            const clearBtn = document.getElementById('clear-search');
+            const noResult = document.getElementById('no-result');
 
-                filterBtns.forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        filterBtns.forEach(b => b.classList.remove('active'));
-                        btn.classList.add('active');
-                        currentFilter = btn.dataset.target;
-                        updateDisplay();
-                    });
-                });
+            let currentFilter = 'all';
+            let currentSearch = '';
 
-                searchEl.addEventListener('input', e => {
-                    currentSearch = e.target.value.toLowerCase();
+            function updateDisplay() {
 
-                    if (currentSearch.length > 0) {
-                        clearBtn.classList.remove('hidden');
+                let found = false;
+
+                items.forEach(item => {
+
+                    const itemCategory = item.dataset.category.trim();
+                    const itemTitle = item.dataset.title.toLowerCase();
+
+                    const categoryMatch =
+                        currentFilter === 'all' ||
+                        itemCategory === currentFilter;
+
+                    const searchMatch =
+                        itemTitle.includes(currentSearch);
+
+                    if (categoryMatch && searchMatch) {
+
+                        item.style.display = 'flex';
+                        found = true;
+
                     } else {
-                        clearBtn.classList.add('hidden');
-                    }
 
-                    updateDisplay();
+                        item.style.display = 'none';
+                    }
                 });
 
-                clearBtn.addEventListener('click', () => {
-                    searchEl.value = '';
-                    currentSearch = '';
-                    clearBtn.classList.add('hidden');
+                if (found) {
+                    noResult.classList.add('hidden');
+                } else {
+                    noResult.classList.remove('hidden');
+                }
+            }
+
+            filterBtns.forEach(btn => {
+
+                btn.addEventListener('click', () => {
+
+                    filterBtns.forEach(b => b.classList.remove('active'));
+
+                    btn.classList.add('active');
+
+                    currentFilter = btn.dataset.target;
+
                     updateDisplay();
-                    searchEl.focus();
                 });
             });
+
+            searchEl.addEventListener('input', (e) => {
+
+                currentSearch = e.target.value.toLowerCase();
+
+                if (currentSearch.length > 0) {
+                    clearBtn.classList.remove('hidden');
+                } else {
+                    clearBtn.classList.add('hidden');
+                }
+
+                updateDisplay();
+            });
+
+            clearBtn.addEventListener('click', () => {
+
+                searchEl.value = '';
+                currentSearch = '';
+
+                clearBtn.classList.add('hidden');
+
+                updateDisplay();
+            });
+
+        });
         </script>
     @endpush
 

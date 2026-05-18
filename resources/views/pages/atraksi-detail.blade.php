@@ -1,9 +1,7 @@
 @extends('layouts.main')
 
-@section('title', 'Gapura Utama Odeon | Daya Tarik Wisata Kampoeng Naga')
-@section('meta_description',
-    'Kepingan warisan arsitektur oriental yang memukau di jantung pecinan Sukabumi — Gapura
-    Utama Odeon Kampoeng Naga, spot foto ikonik dan bersejarah.')
+@section('title', $attraction->title . ' | Daya Tarik Wisata Kampoeng Naga')
+@section('meta_description', $attraction->short_description)
 
 @section('content')
 
@@ -26,7 +24,7 @@
                 <a href="{{ route('pages.atraksi') }}"
                     class="no-underline hover:text-white transition-colors duration-200">Daya Tarik Wisata</a>
                 <i class="iconoir-nav-arrow-right text-sm opacity-50"></i>
-                <span class="text-brand-gold">Gapura Utama Odeon</span>
+                <span class="text-brand-gold">{{ $attraction->title }}</span>
             </div>
         </div>
 
@@ -48,14 +46,14 @@
                         <span class="badge bg-amber-50 text-amber-700 border border-amber-200"><i
                                 class="iconoir-camera text-xs"></i> Foto Terfavorit</span>
                         <span class="badge bg-emerald-50 text-emerald-700 border border-emerald-200"><i
-                                class="iconoir-map-pin text-xs"></i> Jl. Pajagalan, Sukabumi</span>
+                                class="iconoir-map-pin text-xs"></i> {{ $attraction->location_label }}</span>
                     </div>
                     <h1
                         class="font-serif text-4xl md:text-5xl lg:text-[56px] font-bold text-brand-text leading-tight mt-0 mb-3">
-                        Gapura Utama Odeon
+                        {{ $attraction->name }}
                     </h1>
                     <p class="text-brand-muted text-base md:text-lg leading-relaxed max-w-2xl">
-                        Arsitektur pembatas penanda masuk kawasan pusaka budaya Pecinan Kota Sukabumi.
+                        {{ $attraction->excerpt }}
                     </p>
                 </div>
 
@@ -73,9 +71,9 @@
                 </div>
             </div>
 
-            <a href="{{ asset('assets/vihara.jpeg') }}" data-fancybox="main-cover" data-caption="Gapura Utama Odeon"
+            <a href="{{ asset('storage/' . $attraction->main_image) }}" data-fancybox="main-cover" data-caption="Gapura Utama Odeon"
                 class="relative block rounded-[2rem] overflow-hidden h-[300px] md:h-[450px] lg:h-[550px] shadow-card-hover w-full group cursor-zoom-in">
-                <img src="{{ asset('assets/vihara.jpeg') }}" alt="Gapura Utama Odeon"
+                <img src="{{ asset('storage/' . $attraction->main_image) }}" alt="{{ $attraction->name }}"
                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     onerror="this.src='https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1200'">
                 <div
@@ -98,61 +96,45 @@
 
             <div class="lg:col-span-2 space-y-12">
                 <div class="reveal">
-                    <h2 class="font-serif text-2xl md:text-3xl font-bold text-brand-text mb-6">Menjelajah Lebih Dalam</h2>
+                    <h2 class="font-serif text-2xl md:text-3xl font-bold text-brand-text mb-6">
+                        Menjelajah Lebih Dalam
+                    </h2>
+
                     <div class="space-y-5 text-brand-muted leading-relaxed text-base md:text-[16.5px]">
-                        <p>Gapura Utama Odeon bukan sekadar pintu masuk fisik, melainkan <strong
-                                class="text-brand-text font-semibold">mesin waktu</strong> yang mengantarkan setiap
-                            pengunjung ke era kejayaan akulturasi dua budaya di Tanah Pasundan...</p>
+                        <p>{!! nl2br(e($attraction->description)) !!}</p>
                     </div>
                 </div>
 
                 <div class="h-[1px] w-full bg-brand-accent/10"></div>
 
                 <div class="reveal">
-                    <h2 class="font-serif text-2xl font-bold text-brand-text mb-6">Galeri Sekitar</h2>
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        @php $gallery = [
-                                ['src' => 'assets/museum.jpeg', 'alt' => 'Museum Pecinan'],
-                                ['src' => 'assets/kopitiam.jpeg', 'alt' => 'Kopitiam Lawas'],
-                                ['src' => 'assets/lorong.jpeg', 'alt' => 'Lorong Lampion'],
-                                ['src' => 'assets/pertunjukan.jpeg', 'alt' => 'Barongsai'],
-                                ['src' => 'assets/vihara.jpeg', 'alt' => 'Vihara Widhi Sakti'],
-                                ['src' => 'assets/hibah.jpeg', 'alt' => 'Suasana Malam'],
-                                ['src' => 'assets/sundakarsa.jpeg', 'alt' => 'Kuliner Sekitar'],
-                        ]; @endphp
+                    <h2 class="font-serif text-2xl font-bold text-brand-text mb-6">
+                        Galeri Sekitar
+                    </h2>
 
-                        @foreach (array_slice($gallery, 0, 5) as $index => $g)
-                            <a href="{{ asset($g['src']) }}" data-fancybox="atraksi-galeri"
-                                data-caption="{{ $g['alt'] }}"
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+
+                        @forelse ($attraction->galleries as $gallery)
+                            <a href="{{ asset('storage/' . $gallery->image) }}"
+                                data-fancybox="atraksi-galeri"
+                                data-caption="{{ $gallery->caption }}"
                                 class="block h-36 md:h-48 rounded-2xl overflow-hidden cursor-zoom-in group shadow-card hover:shadow-card-hover transition-shadow duration-300 relative">
-                                <img src="{{ asset($g['src']) }}" alt="{{ $g['alt'] }}"
-                                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                    onerror="this.src='https://images.unsplash.com/photo-1559028006-448665bd7c7f?q=80&w=400'">
+
+                                <img src="{{ asset('storage/' . $gallery->image) }}"
+                                    alt="{{ $gallery->caption }}"
+                                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+
                                 <div
                                     class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300">
                                 </div>
                             </a>
-                        @endforeach
 
-                        @if (count($gallery) > 5)
-                            <a href="{{ asset($gallery[5]['src']) }}" data-fancybox="atraksi-galeri"
-                                data-caption="{{ $gallery[5]['alt'] }}"
-                                class="block h-36 md:h-48 rounded-2xl overflow-hidden cursor-pointer group bg-brand-accent/5 border-2 border-dashed border-brand-accent/20 hover:bg-brand-accent/10 hover:border-brand-accent/40 transition-all duration-300 relative">
-                                <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-2">
-                                    <i
-                                        class="iconoir-media-image-list text-3xl text-brand-accent block mb-2 group-hover:scale-110 transition-transform"></i>
-                                    <span class="text-sm font-bold text-brand-accent">Lihat Semua
-                                        ({{ count($gallery) }})</span>
-                                </div>
-                            </a>
+                        @empty
+                            <p class="text-brand-muted">
+                                Belum ada galeri untuk atraksi ini.
+                            </p>
+                        @endforelse
 
-                            <div class="hidden">
-                                @foreach (array_slice($gallery, 6) as $g)
-                                    <a href="{{ asset($g['src']) }}" data-fancybox="atraksi-galeri"
-                                        data-caption="{{ $g['alt'] }}"></a>
-                                @endforeach
-                            </div>
-                        @endif
                     </div>
                 </div>
             </div>
@@ -161,37 +143,60 @@
                 <div class="sticky top-28 space-y-6 reveal">
                     <div class="bg-white rounded-3xl shadow-card border border-brand-accent/10 overflow-hidden">
                         <div class="p-7">
-                            <h3 class="font-serif text-xl font-bold text-brand-text mb-6">Info Praktis</h3>
-                            <ul class="space-y-6">
-                                @php $infos = [['icon' => 'iconoir-clock', 'label' => 'Jam Operasional', 'value' => 'Setiap Hari (24 Jam)'], ['icon' => 'iconoir-dollar', 'label' => 'Tiket Masuk', 'value' => 'Gratis'], ['icon' => 'iconoir-wifi', 'label' => 'Fasilitas', 'value' => 'Toilet & Parkir Tersedia']]; @endphp
-                                @foreach ($infos as $info)
-                                    <li class="flex items-start gap-4">
-                                        <div
-                                            class="w-10 h-10 rounded-xl bg-brand-accent/8 flex items-center justify-center shrink-0 mt-0.5">
-                                            <i class="{{ $info['icon'] }} text-brand-accent text-lg"></i>
-                                        </div>
-                                        <div>
-                                            <p
-                                                class="text-[10px] uppercase tracking-widest font-bold text-brand-muted mb-1">
-                                                {{ $info['label'] }}</p>
+                            <h3 class="font-serif text-xl font-bold text-brand-text mb-6">
+                                Info Praktis
+                            </h3>
 
-                                            @if ($info['label'] == 'Fasilitas')
-                                                <ul class="space-y-1">
-                                                    @foreach (explode(',', $info['value']) as $item)
-                                                        <li
-                                                            class="text-sm font-bold text-brand-text flex items-center gap-2">
-                                                            <span
-                                                                class="w-1.5 h-1.5 rounded-full bg-brand-accent/40"></span>
-                                                            {{ trim($item) }}
-                                                        </li>
-                                                    @endforeach
-                                                </ul>
-                                            @else
-                                                <p class="text-sm font-bold text-brand-text">{{ $info['value'] }}</p>
-                                            @endif
-                                        </div>
-                                    </li>
-                                @endforeach
+                            <ul class="space-y-6">
+
+                                <li class="flex items-start gap-4">
+                                    <div class="w-10 h-10 rounded-xl bg-brand-accent/8 flex items-center justify-center shrink-0 mt-0.5">
+                                        <i class="iconoir-clock text-brand-accent text-lg"></i>
+                                    </div>
+
+                                    <div>
+                                        <p class="text-[10px] uppercase tracking-widest font-bold text-brand-muted mb-1">
+                                            Jam Operasional
+                                        </p>
+
+                                        <p class="text-sm font-bold text-brand-text">
+                                            {{ $attraction->open_time }} - {{ $attraction->close_time }}
+                                        </p>
+                                    </div>
+                                </li>
+
+                                <li class="flex items-start gap-4">
+                                    <div class="w-10 h-10 rounded-xl bg-brand-accent/8 flex items-center justify-center shrink-0 mt-0.5">
+                                        <i class="iconoir-dollar text-brand-accent text-lg"></i>
+                                    </div>
+
+                                    <div>
+                                        <p class="text-[10px] uppercase tracking-widest font-bold text-brand-muted mb-1">
+                                            Tiket Masuk
+                                        </p>
+
+                                        <p class="text-sm font-bold text-brand-text">
+                                            {{ $attraction->ticket_price }}
+                                        </p>
+                                    </div>
+                                </li>
+
+                                <li class="flex items-start gap-4">
+                                    <div class="w-10 h-10 rounded-xl bg-brand-accent/8 flex items-center justify-center shrink-0 mt-0.5">
+                                        <i class="iconoir-wifi text-brand-accent text-lg"></i>
+                                    </div>
+
+                                    <div>
+                                        <p class="text-[10px] uppercase tracking-widest font-bold text-brand-muted mb-1">
+                                            Fasilitas
+                                        </p>
+
+                                        <p class="text-sm font-bold text-brand-text">
+                                            {{ $attraction->facilities }}
+                                        </p>
+                                    </div>
+                                </li>
+
                             </ul>
                         </div>
                     </div>
@@ -200,16 +205,27 @@
                         <div class="w-14 h-14 rounded-full bg-amber-50 mx-auto flex items-center justify-center mb-4">
                             <i class="iconoir-star-solid text-3xl text-amber-500"></i>
                         </div>
-                        <h3 class="font-serif text-lg font-bold text-brand-text mb-2">Bantu Wisatawan Lain</h3>
-                        <p class="text-sm text-brand-muted mb-6 leading-relaxed">Bagikan momen terbaik dan berikan rating
-                            ulasan Anda untuk Atraksi ini di Google Maps.</p>
+
+                        <h3 class="font-serif text-lg font-bold text-brand-text mb-2">
+                            Bantu Wisatawan Lain
+                        </h3>
+
+                        <p class="text-sm text-brand-muted mb-6 leading-relaxed">
+                            Bagikan momen terbaik dan berikan rating ulasan Anda untuk Atraksi ini di Google Maps.
+                        </p>
+
                         <div class="flex flex-col gap-3">
-                            <a href="#" target="_blank"
-                                class="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 text-sm font-bold hover:bg-amber-100 hover:border-amber-300 transition-all duration-300 no-underline">Beri
-                                Ulasan</a>
-                            <a href="#" target="_blank"
-                                class="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl border border-gray-200 text-brand-muted text-sm font-bold hover:border-brand-accent hover:text-brand-accent transition-all duration-300 no-underline">Buka
-                                Titik Maps</a>
+                            <a href="https://maps.app.goo.gl/MtyHtXzbVS5BBfcV6"
+                            target="_blank"
+                            class="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 text-sm font-bold hover:bg-amber-100 hover:border-amber-300 transition-all duration-300 no-underline">
+                                Beri Ulasan
+                            </a>
+
+                            <a href="https://maps.app.goo.gl/MtyHtXzbVS5BBfcV6"
+                            target="_blank"
+                            class="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl border border-gray-200 text-brand-muted text-sm font-bold hover:border-brand-accent hover:text-brand-accent transition-all duration-300 no-underline">
+                                Buka Titik Maps
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -238,7 +254,8 @@
                 Jadikan Ini Bagian dari <br> <span class="text-gradient-gold italic">Perjalanan Anda</span>
             </h2>
             <p class="text-lg md:text-xl text-[#FAF7F2]/80 mb-10 max-w-2xl mx-auto leading-relaxed font-medium">
-                Nikmati kemudahan menjelajahi Gapura Utama Odeon dan puluhan destinasi menarik lainnya melalui paket wisata
+                Nikmati kemudahan menjelajahi {{ $attraction->name }}
+                dan puluhan destinasi menarik lainnya melalui paket wisata 
                 yang telah kami rancang khusus untuk Anda.
             </p>
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -282,8 +299,8 @@
         function shareAttraction() {
             if (navigator.share) {
                 navigator.share({
-                    title: 'Gapura Utama Odeon | Atraksi Kampoeng Naga',
-                    text: 'Lihat daya tarik wisata keren ini di Kampoeng Naga Sukabumi!',
+                    title: '{{ $attraction->title }} | Atraksi Kampoeng Naga',
+                    text: '{{ $attraction->short_description }}',
                     url: window.location.href,
                 }).catch((error) => console.log('Error sharing', error));
             } else {

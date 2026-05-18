@@ -72,8 +72,31 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <div>
                         <label class="block text-sm font-bold text-brand-text dark:text-white mb-2">Kategori Atraksi</label>
-                        <input type="text" name="category" placeholder="Contoh: Spot Foto, Religi..."
-                            class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent/20">
+                        <select
+                            name="category"
+                            required
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505]"
+                        >
+
+                            <option value="">Pilih Kategori</option>
+
+                            <option value="Ikonik">
+                                Ikonik
+                            </option>
+
+                            <option value="Religi & Budaya">
+                                Religi & Budaya
+                            </option>
+
+                            <option value="Hiburan & Acara">
+                                Hiburan & Acara
+                            </option>
+
+                            <option value="Suasana Lokal">
+                                Suasana Lokal
+                            </option>
+
+                        </select>
                     </div>
                     <div class="md:col-span-2">
                         <label class="block text-sm font-bold text-brand-text dark:text-white mb-2">Rentang Hari
