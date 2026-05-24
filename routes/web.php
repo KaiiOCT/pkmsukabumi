@@ -32,7 +32,8 @@ Route::get('/berita-acara', [PageController::class, 'berita'])->name('pages.beri
 Route::get('/berita-acara/{slug}', [PageController::class, 'beritaDetail'])->name('pages.berita-detail');
 
 Route::get('/paket-wisata', [PageController::class, 'paketWisata'])->name('pages.paket-wisata');
-Route::get('/paket-wisata/dummy-detail', [PageController::class, 'paketWisataDetail'])->name('pages.paket-wisata-detail');
+
+Route::get('/paket-wisata/{id}', [PageController::class, 'paketWisataDetail'])->name('pages.paket-wisata-detail');
 
 Route::get('/profil', [PageController::class, 'profil'])->name('pages.profil');
 

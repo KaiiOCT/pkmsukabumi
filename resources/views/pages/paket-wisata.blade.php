@@ -1,7 +1,8 @@
 @extends('layouts.main')
 
 @section('title', 'Paket Wisata | Odeon Kampoeng Naga')
-@section('meta_description', 'Temukan paket wisata terbaik di Odeon Kampoeng Naga Sukabumi — wisata budaya, kuliner, dan sejarah pecinan yang tak terlupakan.')
+@section('meta_description', 'Temukan paket wisata terbaik di Odeon Kampoeng Naga Sukabumi — wisata budaya, kuliner, dan
+    sejarah pecinan yang tak terlupakan.')
 
 @section('content')
 
@@ -57,11 +58,14 @@
                 </div>
 
                 <div class="relative w-full md:w-80 shrink-0">
-                    <input type="text" id="search-input" placeholder="Cari penawaran wisata..." 
+                    <input type="text" id="search-input" placeholder="Cari penawaran wisata..."
                         class="search-input pl-12 pr-10" aria-label="Cari paket wisata">
-                    <i class="iconoir-search absolute left-4 top-1/2 -translate-y-1/2 text-brand-muted text-lg pointer-events-none z-10"></i>
-                    
-                    <button id="clear-search" class="absolute right-4 top-1/2 -translate-y-1/2 text-brand-muted hover:text-brand-accent transition-colors hidden cursor-pointer border-none bg-transparent z-10" aria-label="Hapus pencarian">
+                    <i
+                        class="iconoir-search absolute left-4 top-1/2 -translate-y-1/2 text-brand-muted text-lg pointer-events-none z-10"></i>
+
+                    <button id="clear-search"
+                        class="absolute right-4 top-1/2 -translate-y-1/2 text-brand-muted hover:text-brand-accent transition-colors hidden cursor-pointer border-none bg-transparent z-10"
+                        aria-label="Hapus pencarian">
                         <i class="iconoir-xmark text-lg"></i>
                     </button>
                 </div>
@@ -73,178 +77,97 @@
     <section class="py-8 pb-24 px-5 sm:px-8">
         <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7" id="paket-grid">
 
-            <article class="paket-item card group flex flex-col reveal" data-category="oneday"
-                data-title="napak tilas budaya kuliner odeon">
-                <div class="card-image h-52">
-                    <img src="{{ asset('assets/kopitiam.jpeg') }}" alt="Napak Tilas Budaya & Kuliner"
-                        onerror="this.src='https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=600'">
-                    <div class="absolute inset-0 bg-gradient-card pointer-events-none"></div>
-                    <div class="absolute top-4 left-4">
-                        <span class="badge badge-white">
-                            <i class="iconoir-clock text-xs"></i> 1 Hari Penuh
-                        </span>
-                    </div>
-                </div>
+            @foreach ($tourPackages as $package)
+                <article
+                    class="paket-item group flex flex-col rounded-2xl overflow-hidden shadow-card
+    hover:shadow-card-hover hover:-translate-y-1.5 transition-all duration-300
+    border border-brand-accent/10 bg-white relative reveal"
+                    data-category="{{ str_contains(strtolower($package->duration), '2 hari') ? 'twodays' : 'oneday' }}"
+                    data-title="{{ strtolower($package->title_line1 . ' ' . $package->title_line2) }}">
 
-                <div class="card-body flex flex-col flex-1">
-                    <h3 class="font-serif text-xl font-bold text-brand-text group-hover:text-brand-accent
-                           transition-colors duration-300 mb-2 mt-0 leading-snug">
-                        Napak Tilas Budaya &amp; Kuliner
-                    </h3>
-                    <p class="text-sm text-brand-muted leading-relaxed mb-5 line-clamp-2">
-                        Perjalanan padat mencicipi hidangan otentik dari 5 legenda kuliner pecinan sambil mempelajari
-                        arsitektur klasik klenteng dan lorong bersejarah.
-                    </p>
-
-                    <ul class="space-y-2 mb-6 pb-5 border-b border-brand-accent/8">
-                        <li class="flex items-start gap-2 text-xs text-brand-muted">
-                            <i class="iconoir-check-circle text-emerald-500 text-sm shrink-0 mt-0.5"></i>
-                            Tour Guide Lokal Berlisensi HPI
-                        </li>
-                        <li class="flex items-start gap-2 text-xs text-brand-muted">
-                            <i class="iconoir-check-circle text-emerald-500 text-sm shrink-0 mt-0.5"></i>
-                            5 Tiket Makan UMKM Pecinan
-                        </li>
-                        <li class="flex items-start gap-2 text-xs text-brand-muted">
-                            <i class="iconoir-check-circle text-emerald-500 text-sm shrink-0 mt-0.5"></i>
-                            Fotografer Dokumentasi Profesional
-                        </li>
-                    </ul>
-
-                    <div class="mt-auto flex items-center justify-between">
-                        <div>
-                            <div class="text-[10px] text-brand-muted font-semibold uppercase tracking-wider mb-0.5">Harga
-                                Mulai</div>
-                            <div class="font-serif text-2xl font-bold text-brand-accent leading-none">
-                                Rp 250.000
-                                <span class="text-xs text-brand-muted font-normal">/ pax</span>
-                            </div>
+                    @if ($package->is_bestseller)
+                        <div class="absolute top-4 right-4 z-10">
+                            <span class="badge bg-brand-gold text-brand-dark border-brand-gold shadow-gold">
+                                <i class="iconoir-star-solid text-[10px]"></i> Best Seller
+                            </span>
                         </div>
-                        <a href="{{ route('pages.paket-wisata-detail') }}" class="btn-icon" aria-label="Detail paket">
-                            <i class="iconoir-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </article>
+                    @endif
 
-            <article class="paket-item group flex flex-col rounded-2xl overflow-hidden shadow-card
-                        hover:shadow-card-hover hover:-translate-y-1.5 transition-all duration-300
-                        border-2 border-brand-accent/30 bg-white relative reveal"
-                data-category="twodays" data-title="eksplorasi malam odeon bermalam">
+                    <div class="card-image h-52">
 
-                <div class="absolute top-4 right-4 z-10">
-                    <span class="badge bg-brand-gold text-brand-dark border-brand-gold shadow-gold">
-                        <i class="iconoir-star-solid text-[10px]"></i> Best Seller
-                    </span>
-                </div>
+                        <img src="{{ asset('storage/' . $package->main_image) }}" alt="{{ $package->title_line1 }}"
+                            onerror="this.src='https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=600'">
 
-                <div class="h-1 bg-gradient-to-r from-brand-accent to-brand-gold w-full"></div>
+                        <div class="absolute inset-0 bg-gradient-card pointer-events-none"></div>
 
-                <div class="card-image h-52">
-                    <img src="{{ asset('assets/vihara.jpeg') }}" alt="Eksplorasi Malam Odeon"
-                        onerror="this.src='https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=600'">
-                    <div class="absolute inset-0 bg-gradient-card pointer-events-none"></div>
-                    <div class="absolute top-4 left-4">
-                        <span class="badge badge-white">
-                            <i class="iconoir-moon-sat text-xs"></i> 2 Hari 1 Malam
-                        </span>
-                    </div>
-                </div>
-
-                <div class="card-body flex flex-col flex-1">
-                    <h3 class="font-serif text-xl font-bold text-brand-text group-hover:text-brand-accent
-                           transition-colors duration-300 mb-2 mt-0 leading-snug">
-                        Eksplorasi Malam Odeon
-                    </h3>
-                    <p class="text-sm text-brand-muted leading-relaxed mb-5 line-clamp-2">
-                        Menggabungkan pesona cahaya lampion malam dan riuh perdagangan UMKM. Sangat cocok dinikmati saat
-                        akhir pekan bersama keluarga.
-                    </p>
-
-                    <ul class="space-y-2 mb-6 pb-5 border-b border-brand-accent/8">
-                        <li class="flex items-start gap-2 text-xs text-brand-muted">
-                            <i class="iconoir-check-circle text-emerald-500 text-sm shrink-0 mt-0.5"></i>
-                            Akomodasi Penginapan Bintang 3
-                        </li>
-                        <li class="flex items-start gap-2 text-xs text-brand-muted">
-                            <i class="iconoir-check-circle text-emerald-500 text-sm shrink-0 mt-0.5"></i>
-                            Workshop Eksklusif Merakit Lampion
-                        </li>
-                        <li class="flex items-start gap-2 text-xs text-brand-muted">
-                            <i class="iconoir-check-circle text-emerald-500 text-sm shrink-0 mt-0.5"></i>
-                            Sarapan Dimsum Pagi Gratis
-                        </li>
-                    </ul>
-
-                    <div class="mt-auto flex items-center justify-between">
-                        <div>
-                            <div class="text-[10px] text-brand-muted font-semibold uppercase tracking-wider mb-0.5">Harga
-                                Mulai</div>
-                            <div class="font-serif text-2xl font-bold text-brand-accent leading-none">
-                                Rp 850.000
-                                <span class="text-xs text-brand-muted font-normal">/ pax</span>
-                            </div>
+                        <div class="absolute top-4 left-4">
+                            <span class="badge badge-white">
+                                <i class="iconoir-clock text-xs"></i>
+                                {{ $package->duration }}
+                            </span>
                         </div>
-                        <a href="{{ route('pages.paket-wisata-detail') }}" class="btn-icon" aria-label="Detail paket">
-                            <i class="iconoir-arrow-right"></i>
-                        </a>
                     </div>
-                </div>
-            </article>
 
-            <article class="paket-item card group flex flex-col reveal" data-category="oneday"
-                data-title="study tour pelajar merajut kebhinekaan">
-                <div class="card-image h-52">
-                    <img src="{{ asset('assets/museum.jpeg') }}" alt="Study Tour Pelajar"
-                        onerror="this.src='https://images.unsplash.com/photo-1559028006-448665bd7c7f?q=80&w=600'">
-                    <div class="absolute inset-0 bg-gradient-card pointer-events-none"></div>
-                    <div class="absolute top-4 left-4">
-                        <span class="badge badge-white">
-                            <i class="iconoir-graduation-cap text-xs"></i> Edukasi
-                        </span>
-                    </div>
-                </div>
+                    <div class="card-body flex flex-col flex-1">
 
-                <div class="card-body flex flex-col flex-1">
-                    <h3 class="font-serif text-xl font-bold text-brand-text group-hover:text-brand-accent
-                           transition-colors duration-300 mb-2 mt-0 leading-snug">
-                        Study Tour Pelajar
-                    </h3>
-                    <p class="text-sm text-brand-muted leading-relaxed mb-5 line-clamp-2">
-                        Paket terjangkau untuk studi banding sekolah terkait nilai toleransi beragama dan sejarah
-                        kebhinekaan etnis di wilayah Sukabumi.
-                    </p>
+                        <h3
+                            class="font-serif text-xl font-bold text-brand-text group-hover:text-brand-accent
+            transition-colors duration-300 mb-2 mt-0 leading-snug">
 
-                    <ul class="space-y-2 mb-6 pb-5 border-b border-brand-accent/8">
-                        <li class="flex items-start gap-2 text-xs text-brand-muted">
-                            <i class="iconoir-check-circle text-emerald-500 text-sm shrink-0 mt-0.5"></i>
-                            Edukasi Vihara Langsung oleh Pengurus
-                        </li>
-                        <li class="flex items-start gap-2 text-xs text-brand-muted">
-                            <i class="iconoir-check-circle text-emerald-500 text-sm shrink-0 mt-0.5"></i>
-                            Makan Siang &amp; Snack Bergizi
-                        </li>
-                        <li class="flex items-start gap-2 text-xs text-brand-muted">
-                            <i class="iconoir-check-circle text-emerald-500 text-sm shrink-0 mt-0.5"></i>
-                            Souvenir Gantungan Kunci Sukabumi
-                        </li>
-                    </ul>
+                            {{ $package->title_line1 }}
+                            {{ $package->title_line2 }}
 
-                    <div class="mt-auto flex items-center justify-between">
-                        <div>
-                            <div class="text-[10px] text-brand-muted font-semibold uppercase tracking-wider mb-0.5">Mulai
-                                dari</div>
-                            <div class="font-serif text-2xl font-bold text-brand-accent leading-none">
-                                Rp 75.000
-                                <span class="text-xs text-brand-muted font-normal">/ siswa</span>
+                        </h3>
+
+                        <p class="text-sm text-brand-muted leading-relaxed mb-5 line-clamp-2">
+                            {{ $package->catchphrase }}
+                        </p>
+
+                        <ul class="space-y-2 mb-6 pb-5 border-b border-brand-accent/8">
+
+                            @foreach (explode(',', $package->included) as $item)
+                                <li class="flex items-start gap-2 text-xs text-brand-muted">
+
+                                    <i class="iconoir-check-circle text-emerald-500 text-sm shrink-0 mt-0.5"></i>
+
+                                    {{ trim($item) }}
+
+                                </li>
+                            @endforeach
+
+                        </ul>
+
+                        <div class="mt-auto flex items-center justify-between">
+
+                            <div>
+
+                                <div class="text-[10px] text-brand-muted font-semibold uppercase tracking-wider mb-0.5">
+                                    Harga Mulai
+                                </div>
+
+                                <div class="font-serif text-2xl font-bold text-brand-accent leading-none">
+
+                                    Rp {{ number_format($package->price, 0, ',', '.') }}
+
+                                    <span class="text-xs text-brand-muted font-normal">/ pax</span>
+
+                                </div>
+
                             </div>
+
+                            <a href="{{ route('pages.paket-wisata-detail', $package->id) }}" class="btn-icon"
+                                aria-label="Detail paket">
+
+                                <i class="iconoir-arrow-right"></i>
+
+                            </a>
+
                         </div>
-                        <a href="{{ route('pages.paket-wisata-detail') }}" class="btn-icon" aria-label="Detail paket">
-                            <i class="iconoir-arrow-right"></i>
-                        </a>
+
                     </div>
-                </div>
-            </article>
+
+                </article>
+            @endforeach
 
         </div>
 
@@ -310,13 +233,20 @@
 
     <section class="py-24 px-5 sm:px-8 relative overflow-hidden reveal">
         <div class="absolute inset-0 bg-gradient-to-br from-brand-accent via-[#6b1212] to-brand-dark"></div>
-        <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] mix-blend-overlay"></div>
-        <div class="absolute top-0 right-0 w-96 h-96 bg-brand-gold/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-        <div class="absolute bottom-0 left-0 w-72 h-72 bg-brand-gold-light/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
+        <div
+            class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] mix-blend-overlay">
+        </div>
+        <div
+            class="absolute top-0 right-0 w-96 h-96 bg-brand-gold/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none">
+        </div>
+        <div
+            class="absolute bottom-0 left-0 w-72 h-72 bg-brand-gold-light/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none">
+        </div>
 
         <div class="relative max-w-4xl mx-auto text-center">
             <p class="text-brand-gold text-xs font-bold uppercase tracking-[0.2em] mb-3">Butuh Konsultasi?</p>
-            <h2 class="font-serif text-3xl md:text-4xl font-bold text-white mb-4 leading-tight" style="text-shadow: 0 4px 24px rgba(0,0,0,0.4);">
+            <h2 class="font-serif text-3xl md:text-4xl font-bold text-white mb-4 leading-tight"
+                style="text-shadow: 0 4px 24px rgba(0,0,0,0.4);">
                 Hubungi Kami Sekarang
             </h2>
             <p class="text-[#FAF7F2]/80 text-sm md:text-base mb-8 max-w-md mx-auto leading-relaxed">
@@ -339,7 +269,7 @@
                 const noResult = document.getElementById('no-result');
                 let currentFilter = 'all';
                 let currentSearch = '';
-                
+
                 let hideTimeouts = [];
 
                 function updateDisplay() {
@@ -347,7 +277,7 @@
                     items.forEach((item, index) => {
                         const catMatch = currentFilter === 'all' || item.dataset.category === currentFilter;
                         const searchMatch = item.dataset.title.toLowerCase().includes(currentSearch);
-                        
+
                         if (hideTimeouts[index]) clearTimeout(hideTimeouts[index]);
 
                         if (catMatch && searchMatch) {
@@ -378,13 +308,13 @@
 
                 searchEl.addEventListener('input', e => {
                     currentSearch = e.target.value.toLowerCase();
-                    
+
                     if (currentSearch.length > 0) {
                         clearBtn.classList.remove('hidden');
                     } else {
                         clearBtn.classList.add('hidden');
                     }
-                    
+
                     updateDisplay();
                 });
 

@@ -364,93 +364,65 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div
-                class="group bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-brand-accent/20 transition-all duration-300 transform hover:-translate-y-1 flex flex-col reveal">
-                <div class="relative h-56 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1517400508447-f8dd518b86db?q=80&w=800&auto=format&fit=crop"
-                        alt="Walking Tour"
-                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                    <div
-                        class="absolute top-4 left-4 bg-gradient-to-r from-amber-200 to-amber-100 text-amber-800 text-[10px] font-bold px-3 py-1.5 rounded-full shadow-lg uppercase tracking-wider flex items-center gap-1.5 border border-amber-300">
-                        <i class="iconoir-star-solid text-amber-600"></i> Best Seller
-                    </div>
-                </div>
-                <div class="p-6 flex flex-col flex-1">
-                    <h3 class="font-serif text-xl font-bold text-brand-text mb-2 mt-0">Heritage Walking Tour</h3>
-                    <p class="text-sm text-brand-muted leading-relaxed mb-6 line-clamp-2">
-                        Menelusuri jejak sejarah perkembangan awal pecinan di Sukabumi, mendengarkan cerita lokal yang
-                        melegenda.
-                    </p>
-                    <div class="flex items-end justify-between mt-auto pt-4 border-t border-gray-100">
-                        <div>
-                            <span class="text-[10px] uppercase tracking-wider text-brand-muted block mb-0.5 mt-0">Mulai
-                                dari</span>
-                            <span class="text-lg font-bold text-brand-accent block">Rp 50.000<span
-                                    class="text-xs font-normal text-brand-muted">/pax</span></span>
-                        </div>
-                        <a href="{{ route('pages.paket-wisata-detail') }}"
-                            class="text-brand-accent bg-red-50 hover:bg-red-100 w-10 h-10 flex items-center justify-center rounded-full transition">
-                            <i class="iconoir-arrow-right text-lg"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
+            @foreach ($tourPackages as $package)
+                <div
+                    class="group bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-brand-accent/20 transition-all duration-300 transform hover:-translate-y-1 flex flex-col reveal">
 
-            <div
-                class="group bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-brand-accent/20 transition-all duration-300 transform hover:-translate-y-1 flex flex-col reveal">
-                <div class="relative h-56 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=800&auto=format&fit=crop"
-                        alt="Kuliner"
-                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                </div>
-                <div class="p-6 flex flex-col flex-1">
-                    <h3 class="font-serif text-xl font-bold text-brand-text mb-2 mt-0">Pecinan Culinary Trip</h3>
-                    <p class="text-sm text-brand-muted leading-relaxed mb-6 line-clamp-2">
-                        Perjalanan memanjakan lidah mencicipi berbagai hidangan khas akulturasi lokal dan Tionghoa yang
-                        otentik.
-                    </p>
-                    <div class="flex items-end justify-between mt-auto pt-4 border-t border-gray-100">
-                        <div>
-                            <span class="text-[10px] uppercase tracking-wider text-brand-muted block mb-0.5 mt-0">Mulai
-                                dari</span>
-                            <span class="text-lg font-bold text-brand-accent block">Rp 120.000<span
-                                    class="text-xs font-normal text-brand-muted">/pax</span></span>
-                        </div>
-                        <a href="{{ route('pages.paket-wisata-detail') }}"
-                            class="text-brand-accent bg-red-50 hover:bg-red-100 w-10 h-10 flex items-center justify-center rounded-full transition">
-                            <i class="iconoir-arrow-right text-lg"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
+                    <div class="relative h-56 overflow-hidden">
 
-            <div
-                class="group bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-brand-accent/20 transition-all duration-300 transform hover:-translate-y-1 flex flex-col lg:col-span-1 md:col-span-2 md:w-1/2 md:mx-auto lg:w-auto lg:mx-0 reveal">
-                <div class="relative h-56 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1512618831669-521d4b375f5d?q=80&w=800&auto=format&fit=crop"
-                        alt="Edukasi"
-                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                </div>
-                <div class="p-6 flex flex-col flex-1">
-                    <h3 class="font-serif text-xl font-bold text-brand-text mb-2 mt-0">Paket Edukasi Budaya</h3>
-                    <p class="text-sm text-brand-muted leading-relaxed mb-6 line-clamp-2">
-                        Diperuntukkan bagi pelajar/mahasiswa. Eksplorasi mendalam terkait seni, tradisi, dan perpaduan
-                        budaya.
-                    </p>
-                    <div class="flex items-end justify-between mt-auto pt-4 border-t border-gray-100">
-                        <div>
-                            <span class="text-[10px] uppercase tracking-wider text-brand-muted block mb-0.5 mt-0">Mulai
-                                dari</span>
-                            <span class="text-lg font-bold text-brand-accent block">Rp 75.000<span
-                                    class="text-xs font-normal text-brand-muted">/pax</span></span>
-                        </div>
-                        <a href="{{ route('pages.paket-wisata-detail') }}"
-                            class="text-brand-accent bg-red-50 hover:bg-red-100 w-10 h-10 flex items-center justify-center rounded-full transition">
-                            <i class="iconoir-arrow-right text-lg"></i>
-                        </a>
+                        <img src="{{ asset('storage/' . $package->main_image) }}" alt="{{ $package->title_line1 }}"
+                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+
+                        @if ($package->is_bestseller)
+                            <div
+                                class="absolute top-4 left-4 bg-gradient-to-r from-amber-200 to-amber-100 text-amber-800 text-[10px] font-bold px-3 py-1.5 rounded-full shadow-lg uppercase tracking-wider flex items-center gap-1.5 border border-amber-300">
+
+                                <i class="iconoir-star-solid text-amber-600"></i>
+                                Best Seller
+
+                            </div>
+                        @endif
+
                     </div>
+
+                    <div class="p-6 flex flex-col flex-1">
+
+                        <h3 class="font-serif text-xl font-bold text-brand-text mb-2 mt-0">
+                            {{ $package->title_line1 }}
+                            {{ $package->title_line2 }}
+                        </h3>
+
+                        <p class="text-sm text-brand-muted leading-relaxed mb-6 line-clamp-2">
+                            {{ $package->catchphrase }}
+                        </p>
+
+                        <div class="flex items-end justify-between mt-auto pt-4 border-t border-gray-100">
+
+                            <div>
+                                <span class="text-[10px] uppercase tracking-wider text-brand-muted block mb-0.5 mt-0">
+                                    Mulai dari
+                                </span>
+
+                                <span class="text-lg font-bold text-brand-accent block">
+                                    Rp {{ number_format($package->price, 0, ',', '.') }}
+                                    <span class="text-xs font-normal text-brand-muted">/pax</span>
+                                </span>
+                            </div>
+
+                            <a href="#"
+                                class="text-brand-accent bg-red-50 hover:bg-red-100 w-10 h-10 flex items-center justify-center rounded-full transition">
+
+                                <i class="iconoir-arrow-right text-lg"></i>
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
                 </div>
-            </div>
+            @endforeach
+
         </div>
 
         <div class="mt-8 text-center md:hidden reveal">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\News;
+use App\Models\TourPackage;
 use App\Models\Umkm;
 use Illuminate\Http\Request;
 
@@ -17,8 +18,9 @@ class HomeController extends Controller
             ->get();
 
         $umkms = Umkm::latest()->take(3)->get();
+        $tourPackages = TourPackage::latest()->take(3)->get();
 
-        return view('home', compact('latestNews', 'umkms'));
+        return view('home', compact('latestNews', 'umkms', 'tourPackages'));
     }
 
     public function showNews($slug)

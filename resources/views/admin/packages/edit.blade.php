@@ -12,7 +12,7 @@
         </a>
     </div>
 
-    <form action="#" method="POST" enctype="multipart/form-data" class="w-full mx-auto pb-10">
+    <form action="{{ route('admin.packages.update', $package->id) }}" method="POST" enctype="multipart/form-data" class="w-full mx-auto pb-10">
         @csrf
         @method('PUT')
 
@@ -25,7 +25,7 @@
                     </h3>
                     <label
                         class="flex items-center gap-2 cursor-pointer bg-brand-gold/10 px-4 py-2 rounded-xl border border-brand-gold/20 hover:bg-brand-gold/20 transition-colors">
-                        <input type="checkbox" name="is_bestseller" value="1" checked
+                        <input type="checkbox" name="is_bestseller" value="1"  {{ $package->is_bestseller ? 'checked' : '' }}
                             class="w-4 h-4 text-brand-accent border-gray-300 rounded">
                         <span class="text-sm font-bold text-brand-text dark:text-white flex items-center gap-1">
                             <i class="iconoir-star-solid text-brand-gold"></i> Best Seller
@@ -37,7 +37,7 @@
                     <div>
                         <label class="block text-sm font-bold text-brand-text dark:text-white mb-2">Judul Utama (Baris 1)
                             <span class="text-rose-500">*</span></label>
-                        <input type="text" name="title_line1" required value="Eksplorasi Mendalam"
+                        <input type="text" name="title_line1" required value="{{ $package->title_line1 }}"
                             class="w-full px-4 py-3.5 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent/20">
                     </div>
                     <div>
@@ -74,7 +74,7 @@
                     <label class="block text-sm font-bold text-brand-text dark:text-white mb-2">Deskripsi Lengkap Paket
                         <span class="text-rose-500">*</span></label>
                     <textarea name="description" rows="5" required
-                        class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent/20 custom-scrollbar">Paket perjalanan unggulan ini tidak dirancang sekadar untuk berlibur, melainkan untuk membawa Anda menyelami romantika kehidupan tempo dulu, di mana harmoni budaya, kuliner legendaris, dan arsitektur otentik melebur menjadi satu.</textarea>
+                        class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent/20 custom-scrollbar">{{ $package->description }}</textarea>
                 </div>
             </div>
 
@@ -115,7 +115,7 @@
                         <div class="relative">
                             <span
                                 class="absolute inset-y-0 left-0 pl-4 flex items-center text-brand-muted font-bold text-sm">Rp</span>
-                            <input type="number" name="price" required value="850000"
+                            <input type="number" name="price" required value="{{ $package->price }}"
                                 class="w-full pl-11 pr-4 py-3.5 rounded-xl border border-brand-accent/30 bg-brand-accent/5 dark:bg-brand-gold/5 text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent font-bold text-lg">
                         </div>
                     </div>
@@ -195,7 +195,7 @@
                         class="flex flex-col items-center justify-center w-full h-64 rounded-[2rem] border-2 border-dashed border-gray-300 dark:border-white/20 bg-gray-50 hover:bg-gray-100 dark:bg-[#0A0505] dark:hover:bg-white/5 transition-all cursor-pointer relative overflow-hidden group shadow-inner">
 
                         <img id="preview-main-image"
-                            src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=800" alt="Current Cover"
+                            src="{{ asset('storage/' . $package->main_image) }}" alt="Current Cover"
                             class="absolute inset-0 w-full h-full object-cover">
 
                         <div id="main-image-placeholder"

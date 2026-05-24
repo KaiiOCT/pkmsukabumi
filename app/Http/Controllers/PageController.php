@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Pengelola;
 use App\Models\Umkm;
 use App\Models\Attraction;
+use App\Models\TourPackage;
 
 class PageController extends Controller
 {
@@ -42,7 +43,7 @@ class PageController extends Controller
         return view('pages.umkm-detail', compact('umkm'));
     }
 
-       public function atraksi()
+    public function atraksi()
     {
         $attractions = Attraction::latest()->get();
 
@@ -88,12 +89,18 @@ class PageController extends Controller
 
     public function paketWisata()
     {
-        return view('pages.paket-wisata');
+        $tourPackages = TourPackage::where('status', 'active')
+            ->latest()
+            ->paginate(6);
+
+        return view('pages.paket-wisata', compact('tourPackages'));
     }
 
-    public function paketWisataDetail()
+    public function paketWisataDetail($id)
     {
-        return view('pages.paket-wisata-detail');
+        $package = TourPackage::findOrFail($id);
+
+        return view('pages.paket-wisata-detail', compact('package'));
     }
 
     public function profil()
