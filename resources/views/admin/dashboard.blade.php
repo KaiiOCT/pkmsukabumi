@@ -58,7 +58,7 @@
                     <i class="iconoir-shop text-2xl"></i>
                 </div>
             </div>
-            <h3 class="text-2xl font-bold text-brand-text dark:text-white mb-1">32</h3>
+            <h3 class="text-2xl font-bold text-brand-text dark:text-white mb-1">{{ $totalUmkm }}</h3>
             <p class="text-xs text-brand-muted dark:text-white/50 font-medium">UMKM Aktif</p>
         </div>
 
@@ -68,18 +68,18 @@
                     <i class="iconoir-journal text-2xl"></i>
                 </div>
             </div>
-            <h3 class="text-2xl font-bold text-brand-text dark:text-white mb-1">15</h3>
+            <h3 class="text-2xl font-bold text-brand-text dark:text-white mb-1">{{ $totalBeritaAcara }}</h3>
             <p class="text-xs text-brand-muted dark:text-white/50 font-medium">Berita & Acara</p>
         </div>
 
         <div class="bg-white dark:bg-[#1E1212] p-6 rounded-[2rem] border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-md transition-all duration-300 group">
             <div class="flex items-center justify-between mb-4">
                 <div class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform">
-                    <i class="iconoir-group text-2xl"></i>
+                    <i class="iconoir-camera text-2xl"></i>
                 </div>
             </div>
-            <h3 class="text-2xl font-bold text-brand-text dark:text-white mb-1">1.2K</h3>
-            <p class="text-xs text-brand-muted dark:text-white/50 font-medium">Estimasi Wisatawan</p>
+            <h3 class="text-2xl font-bold text-brand-text dark:text-white mb-1">{{ $totalAtraksi }}</h3>
+            <p class="text-xs text-brand-muted dark:text-white/50 font-medium">Atraksi & Destinasi</p>
         </div>
 
     </div>

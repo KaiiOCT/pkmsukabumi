@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Attraction;
 use Illuminate\Http\Request;
 use App\Models\Booking;
+use App\Models\News;
+use App\Models\Umkm;
 
 class DashboardController extends Controller
 {
@@ -14,9 +17,18 @@ class DashboardController extends Controller
 
         $totalBookings = Booking::count();
 
+        $totalUmkm = Umkm::count();
+
+        $totalBeritaAcara = News::count();
+
+        $totalAtraksi = Attraction::count();
+
         return view('admin.dashboard', compact(
             'latestBookings',
-            'totalBookings'
+            'totalBookings',
+            'totalUmkm',
+            'totalBeritaAcara',
+            'totalAtraksi'
         ));
     }
 }
