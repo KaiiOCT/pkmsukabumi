@@ -123,7 +123,6 @@
                             class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent/20">
                     </div>
                 </div>
-
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-bold text-brand-text dark:text-white mb-2">Fasilitas Tersedia</label>
@@ -135,8 +134,29 @@
                         <label class="block text-sm font-bold text-brand-text dark:text-white mb-2 flex items-center gap-2">
                             <i class="iconoir-map-pin text-rose-500"></i> Link Google Maps
                         </label>
-                        <input type="url" name="google_maps_url" value="https://maps.google.com/?q=Vihara+Widhi+Sakti" 
+                        <input type="url" name="google_maps_url" value="{{ old('google_maps_url', $attraction->google_maps_url) }}"
                             class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent/20">
+                    </div>
+                    <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-bold text-brand-text dark:text-white mb-2">
+                                Latitude
+                            </label>
+                            <input type="text" name="latitude"
+                                value="{{ old('latitude', $attraction->latitude) }}"
+                                placeholder="Contoh: -6.9181234"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent/20">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-brand-text dark:text-white mb-2">
+                                Longitude
+                            </label>
+                            <input type="text" name="longitude"
+                                value="{{ old('longitude', $attraction->longitude) }}"
+                                placeholder="Contoh: 106.9271234"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent/20">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -151,7 +171,10 @@
                     <label class="block text-sm font-bold text-brand-text dark:text-white mb-3">Foto Utama Atraksi Saat Ini</label>
                     <label class="flex flex-col items-center justify-center w-full h-64 rounded-[2.5rem] border-2 border-dashed border-gray-300 dark:border-white/20 bg-gray-50 hover:bg-gray-100 dark:bg-[#0A0505] dark:hover:bg-white/5 transition-all cursor-pointer relative overflow-hidden group shadow-inner">
                         
-                        <img id="preview-main-image" src="{{ asset('assets/vihara.jpeg')}}" alt="Current Cover" class="absolute inset-0 w-full h-full object-cover">
+                        <img id="preview-main-image"
+                        src="{{ $attraction->main_image ? asset('storage/' . $attraction->main_image) : 'https://placehold.co/600x400?text=No+Image' }}"
+                        alt="{{ $attraction->name }}"
+                        class="absolute inset-0 w-full h-full object-cover">
                         
                         <div id="main-image-placeholder" class="text-center z-10 p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/60 backdrop-blur-md rounded-2xl">
                             <i class="iconoir-refresh text-3xl text-white mb-2 transition-colors"></i>

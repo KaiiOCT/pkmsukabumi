@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\News;
 use App\Models\TourPackage;
 use App\Models\Umkm;
+use App\Models\Attraction;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -17,10 +18,28 @@ class HomeController extends Controller
             ->take(3)
             ->get();
 
+        // Data untuk section card/home yang sudah ada
         $umkms = Umkm::latest()->take(3)->get();
         $tourPackages = TourPackage::latest()->take(3)->get();
 
-        return view('home', compact('latestNews', 'umkms', 'tourPackages'));
+        // Data khusus untuk marker peta di beranda
+        $mapAttractions = Attraction::whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->latest()
+            ->get();
+
+        $mapUmkms = Umkm::whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->latest()
+            ->get();
+
+        return view('home', compact(
+            'latestNews',
+            'umkms',
+            'tourPackages',
+            'mapAttractions',
+            'mapUmkms'
+        ));
     }
 
     public function showNews($slug)

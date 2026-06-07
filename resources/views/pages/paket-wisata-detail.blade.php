@@ -487,12 +487,14 @@
                             </label>
 
                             <div class="relative">
-                                <i
-                                    class="iconoir-calendar absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-white/40 pointer-events-none"></i>
+                                <button type="button" id="datePickerBtn"
+                                    class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-white/40 cursor-pointer z-10 bg-transparent border-none outline-none p-0">
+                                    <i class="iconoir-calendar"></i>
+                                </button>
 
-                                <input type="date" name="date" required
-                                    class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#0A0505] text-brand-text dark:text-white text-sm outline-none focus:ring-2 focus:ring-brand-accent/20"
-                                    style="color-scheme: dark;">
+                                <input type="text" id="cust_date" name="date" required readonly
+                                    placeholder="Pilih tanggal kedatangan"
+                                    class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#0A0505] text-brand-text dark:text-white text-sm outline-none focus:ring-2 focus:ring-brand-accent/20 cursor-pointer">
                             </div>
                         </div>
 
@@ -536,12 +538,27 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
-        flatpickr("#cust_date", {
-            dateFormat: "Y-m-d", // format untuk backend Laravel
-            altInput: true, // bikin tampilan lebih cantik
-            altFormat: "d F Y", // contoh: 29 April 2026
-            allowInput: false // user tidak bisa ngetik manual
-        });
+    document.addEventListener('DOMContentLoaded', function () {
+        const dateInput = document.querySelector("#cust_date");
+
+        if (dateInput) {
+            const datePicker = flatpickr(dateInput, {
+                dateFormat: "Y-m-d",      // format untuk backend Laravel
+                altInput: true,           // tampilan lebih rapi untuk user
+                altFormat: "d F Y",       // contoh: 07 Juni 2026
+                minDate: "today",         // tidak bisa pilih tanggal sebelum hari ini
+                defaultDate: "today",     // otomatis terisi tanggal hari ini
+                allowInput: false,        // user tidak bisa ngetik manual
+                clickOpens: true,
+                disableMobile: true
+            });
+
+            // buka kalender saat icon diklik
+            document.querySelector("#datePickerBtn").addEventListener("click", function () {
+                datePicker.open();
+            });
+        }
+    });
     </script>
 
     <script>

@@ -164,6 +164,29 @@
                             <input type="url" name="gmaps_url" value="{{ old('gmaps_url', $umkm->gmaps_url) }}"
                                 class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent/20">
                         </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-bold text-brand-text dark:text-white mb-2">
+                                    Latitude
+                                </label>
+                                <input type="text" name="latitude"
+                                    value="{{ old('latitude', $umkm->latitude) }}"
+                                    placeholder="Contoh: -6.9181234"
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent/20">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-bold text-brand-text dark:text-white mb-2">
+                                    Longitude
+                                </label>
+                                <input type="text" name="longitude"
+                                    value="{{ old('longitude', $umkm->longitude) }}"
+                                    placeholder="Contoh: 106.9271234"
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent/20">
+                            </div>
+                        </div>
+                        
                     </div>
 
                     <div>

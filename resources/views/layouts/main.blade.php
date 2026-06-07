@@ -294,6 +294,7 @@
             box-shadow: none !important;
         }
     </style>
+    @stack('styles')
 </head>
 
 <body class="font-sans bg-brand-primary text-brand-text antialiased">
@@ -339,7 +340,7 @@
                             'pattern' => 'pages.paket-wisata*',
                             'label' => 'Paket Wisata',
                         ],
-                        ['route' => 'pages.umkm', 'pattern' => 'pages.umkm*', 'label' => 'UMKM'],
+                        ['route' => 'pages.umkm', 'pattern' => 'pages.umkm*', 'label' => 'UMKM', 'class' => 'notranslate'],
                         ['route' => 'pages.berita', 'pattern' => 'pages.berita*', 'label' => 'Berita'],
                         ['route' => 'pages.profil', 'pattern' => 'pages.profil*', 'label' => 'Profile'],
                     ];
@@ -757,6 +758,19 @@
 
         let currentLang = localStorage.getItem('odeon_lang') || 'id';
 
+        // Atur cookie sebelum load Google Translate
+        function setGoogleTranslateCookie(lang) {
+            const domain = window.location.hostname;
+            if (lang === 'en') {
+                document.cookie = "googtrans=/id/en; path=/; domain=" + domain;
+                document.cookie = "googtrans=/id/en; path=/;";
+            } else {
+                document.cookie = "googtrans=/id/id; path=/; domain=" + domain;
+                document.cookie = "googtrans=/id/id; path=/;";
+            }
+        }
+
+        // Update UI tombol
         function applyLangUI(lang) {
             const langIcon = document.getElementById('lang-icon');
             const langLabelM = document.getElementById('lang-label-mobile');
@@ -769,37 +783,46 @@
             }
         }
 
-        function setGoogleTranslateCookie(lang) {
-            const domain = window.location.hostname;
-
-            if (lang === 'id') {
-                document.cookie = "googtrans=/id/id; path=/; domain=" + domain;
-                document.cookie = "googtrans=/id/id; path=/;";
-            } else {
-                document.cookie = "googtrans=/id/en; path=/; domain=" + domain;
-                document.cookie = "googtrans=/id/en; path=/;";
-            }
-        }
-
+        // Toggle bahasa
         function toggleLang() {
             currentLang = currentLang === 'id' ? 'en' : 'id';
-
             localStorage.setItem('odeon_lang', currentLang);
-
             setGoogleTranslateCookie(currentLang);
 
+            // Refresh halaman supaya Google Translate auto-load ke bahasa target
             window.location.reload();
         }
 
-        applyLangUI(currentLang);
+        // Inisialisasi Google Translate
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'id',
+                includedLanguages: 'en,id',
+                autoDisplay: false
+            }, 'google_translate_element');
 
-        document.getElementById('lang-toggle')?.addEventListener('click', toggleLang);
-        document.getElementById('lang-toggle-mobile')?.addEventListener('click', toggleLang);
+            // Trigger translate sesuai cookie
+            const iframe = document.querySelector('iframe.goog-te-menu-frame');
+            if (iframe) {
+                iframe.contentWindow.postMessage({type: 'setLang', lang: currentLang}, '*');
+            }
+        }
+
+        // Jalankan saat DOM siap
+        document.addEventListener('DOMContentLoaded', () => {
+            setGoogleTranslateCookie(currentLang);
+            applyLangUI(currentLang);
+
+            document.getElementById('lang-toggle')?.addEventListener('click', toggleLang);
+            document.getElementById('lang-toggle-mobile')?.addEventListener('click', toggleLang);
+        });
     </script>
 
     <div id="google_translate_element" style="display:none"></div>
+
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
     </script>
+
     <script>
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({

@@ -2,6 +2,570 @@
 
 @section('title', 'Beranda | Odeon Kampoeng Naga')
 
+@push('styles')
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        #home-map {
+            width: 100%;
+            height: 580px;
+            border-radius: 28px;
+            overflow: hidden;
+            border: 1px solid rgba(174, 82, 56, 0.16);
+            z-index: 1;
+        }
+
+        .home-map-card {
+            background: linear-gradient(180deg, #ffffff 0%, #fffaf5 100%);
+            border-radius: 36px;
+            padding: 18px;
+            box-shadow: 0 28px 80px rgba(45, 20, 10, 0.14);
+            border: 1px solid rgba(174, 82, 56, 0.10);
+            position: relative;
+        }
+
+        .home-map-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .map-filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .map-filter-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            border-radius: 999px;
+            border: 1px solid rgba(139, 26, 26, 0.14);
+            background: #ffffff;
+            color: #6b1212;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 8px 22px rgba(45, 20, 10, 0.06);
+        }
+
+        .map-filter-btn:hover,
+        .map-filter-btn.active {
+            background: #8B1A1A;
+            color: #ffffff;
+            border-color: #8B1A1A;
+            transform: translateY(-1px);
+        }
+
+        .map-help-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            border-radius: 999px;
+            border: 1px solid rgba(201, 168, 76, 0.38);
+            background: rgba(201, 168, 76, 0.14);
+            color: #6b4d00;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .map-help-btn:hover {
+            background: rgba(201, 168, 76, 0.24);
+        }
+
+        .map-help-panel {
+            position: relative;
+            margin-bottom: 18px;
+            padding: 0;
+            border-radius: 28px;
+            overflow: hidden;
+            border: 1px solid rgba(139, 26, 26, 0.12);
+            background:
+                radial-gradient(circle at top left, rgba(201, 168, 76, 0.24), transparent 34%),
+                linear-gradient(135deg, #fffaf2 0%, #ffffff 48%, #fff6ec 100%);
+            box-shadow:
+                0 18px 46px rgba(45, 20, 10, 0.10),
+                inset 0 1px 0 rgba(255, 255, 255, 0.78);
+        }
+
+        .map-help-panel.hidden {
+            display: none;
+        }
+
+        .map-help-inner {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1.1fr 1.5fr auto;
+            align-items: stretch;
+            gap: 18px;
+            padding: 20px;
+        }
+
+        .map-help-inner::before {
+            content: "";
+            position: absolute;
+            left: 20px;
+            right: 20px;
+            top: 0;
+            height: 3px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #8B1A1A, #C9A84C, #8B1A1A);
+            opacity: 0.9;
+        }
+
+        .map-help-main {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            min-width: 0;
+        }
+
+        .map-help-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #8B1A1A, #C0482D);
+            color: #ffffff;
+            box-shadow: 0 14px 30px rgba(139, 26, 26, 0.24);
+        }
+
+        .map-help-icon i {
+            font-size: 22px;
+        }
+
+        .map-help-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
+            color: #8B1A1A;
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .map-help-title {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 900;
+            color: #2f1712;
+            line-height: 1.25;
+        }
+
+        .map-help-desc {
+            margin: 8px 0 0;
+            font-size: 13px;
+            line-height: 1.65;
+            color: #7A6355;
+        }
+
+        .map-help-steps {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .map-help-step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.70);
+            border: 1px solid rgba(139, 26, 26, 0.08);
+            box-shadow: 0 8px 22px rgba(45, 20, 10, 0.045);
+        }
+
+        .map-help-step-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: rgba(139, 26, 26, 0.10);
+            color: #8B1A1A;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .map-help-step:nth-child(2) .map-help-step-number {
+            background: rgba(201, 168, 76, 0.22);
+            color: #7A5A00;
+        }
+
+        .map-help-step:nth-child(3) .map-help-step-number {
+            background: rgba(139, 26, 26, 0.10);
+            color: #8B1A1A;
+        }
+
+        .map-help-step:nth-child(4) .map-help-step-number {
+            background: rgba(201, 168, 76, 0.22);
+            color: #7A5A00;
+        }
+
+        .map-help-step-text {
+            min-width: 0;
+        }
+
+        .map-help-step-text strong {
+            display: block;
+            margin-bottom: 2px;
+            color: #3a1f16;
+            font-size: 12px;
+            font-weight: 900;
+            line-height: 1.2;
+        }
+
+        .map-help-step-text span {
+            display: block;
+            color: #7A6355;
+            font-size: 11px;
+            line-height: 1.35;
+        }
+
+        .map-help-close {
+            width: 38px;
+            height: 38px;
+            border-radius: 999px;
+            border: 1px solid rgba(139, 26, 26, 0.10);
+            background: rgba(255, 255, 255, 0.78);
+            color: #8B1A1A;
+            font-weight: 900;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.25s ease;
+            box-shadow: 0 8px 18px rgba(45, 20, 10, 0.07);
+        }
+
+        .map-help-close:hover {
+            background: #8B1A1A;
+            color: #ffffff;
+            transform: rotate(90deg);
+        }
+
+        .map-help-note {
+            position: absolute;
+            right: 20px;
+            bottom: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: rgba(122, 99, 85, 0.76);
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .map-count-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(139, 26, 26, 0.08);
+            color: #6b1212;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .odeon-marker {
+            width: 44px;
+            height: 44px;
+            border-radius: 50% 50% 50% 8px;
+            transform: rotate(-45deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #ffffff;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.28);
+            position: relative;
+        }
+
+        .odeon-marker::after {
+            content: "";
+            position: absolute;
+            inset: 7px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.16);
+        }
+
+        .odeon-marker i {
+            transform: rotate(45deg);
+            color: #ffffff;
+            font-size: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .odeon-marker.attraction {
+            background: linear-gradient(135deg, #8B1A1A, #C0482D);
+        }
+
+        .odeon-marker.umkm {
+            background: linear-gradient(135deg, #C9A84C, #8A5A0A);
+        }
+
+        .leaflet-tooltip {
+            border: none;
+            border-radius: 999px;
+            padding: 7px 12px;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+            font-size: 12px;
+            font-weight: 800;
+            color: #3a1f16;
+        }
+
+        .odeon-map-popup .leaflet-popup-content-wrapper {
+            padding: 0;
+            border-radius: 18px;
+            overflow: hidden;
+            background: #fffaf5;
+            box-shadow: 0 18px 42px rgba(45, 20, 10, 0.24);
+            border: 1px solid rgba(139, 26, 26, 0.12);
+        }
+
+        .odeon-map-popup .leaflet-popup-content {
+            width: 220px !important;
+            margin: 0;
+        }
+
+        .odeon-map-popup .leaflet-popup-tip {
+            background: #fffaf5;
+        }
+
+        .odeon-popup-card {
+            background: linear-gradient(180deg, #ffffff 0%, #fff8ee 100%);
+            overflow: hidden;
+        }
+
+        .odeon-popup-top {
+            height: 76px;
+            position: relative;
+            overflow: hidden;
+            background: #3a1f16;
+        }
+
+        .odeon-popup-top img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            opacity: 0.92;
+        }
+
+        .odeon-popup-top::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(45, 20, 10, 0.72), rgba(45, 20, 10, 0.06));
+        }
+
+        .odeon-popup-badge {
+            position: absolute;
+            left: 10px;
+            bottom: 9px;
+            z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 8px;
+            border-radius: 999px;
+            color: #ffffff;
+            font-size: 9px;
+            font-weight: 900;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        .odeon-popup-badge.attraction {
+            background: linear-gradient(135deg, #8B1A1A, #C0482D);
+        }
+
+        .odeon-popup-badge.umkm {
+            background: linear-gradient(135deg, #C9A84C, #8A5A0A);
+        }
+
+        .odeon-popup-body {
+            padding: 12px;
+        }
+
+        .odeon-popup-title {
+            margin: 0 0 5px;
+            color: #2f1712;
+            font-size: 14px;
+            font-weight: 900;
+            line-height: 1.22;
+        }
+
+        .odeon-popup-desc {
+            margin: 0 0 9px;
+            color: #7A6355;
+            font-size: 11px;
+            line-height: 1.45;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .odeon-popup-meta {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #6f5548;
+            font-size: 10.5px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .odeon-popup-meta i {
+            color: #8B1A1A;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .odeon-popup-footer {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .odeon-popup-chip {
+            flex: 1;
+            min-width: 0;
+            padding: 7px 8px;
+            border-radius: 999px;
+            background: rgba(139, 26, 26, 0.08);
+            color: #6b1212;
+            font-size: 9.5px;
+            font-weight: 900;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .odeon-popup-link {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 9px 13px;
+            border-radius: 999px;
+            background: #8B1A1A;
+            color: #ffffff !important;
+            text-decoration: none !important;
+            font-size: 11px;
+            font-weight: 900;
+            line-height: 1;
+            box-shadow: 0 10px 20px rgba(139, 26, 26, 0.28);
+            border: 1px solid rgba(255, 255, 255, 0.75);
+        }
+
+        .odeon-popup-link:hover {
+            background: #6b1212;
+            color: #ffffff !important;
+            box-shadow: 0 12px 24px rgba(139, 26, 26, 0.34);
+        }
+
+        .odeon-popup-link i {
+            font-size: 12px;
+        }
+
+        .odeon-map-popup .leaflet-popup-close-button {
+            width: 24px;
+            height: 24px;
+            top: 8px;
+            right: 8px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.92);
+            color: #8B1A1A !important;
+            font-size: 17px;
+            font-weight: 900;
+            line-height: 22px;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+        }
+
+        .odeon-map-popup .leaflet-popup-close-button:hover {
+            background: #8B1A1A;
+            color: #ffffff !important;
+        }
+
+        .leaflet-control-attribution {
+            font-size: 10px;
+        }
+
+        @media (max-width: 640px) {
+            #home-map {
+                height: 480px;
+                border-radius: 22px;
+            }
+
+            .home-map-card {
+                padding: 12px;
+                border-radius: 28px;
+            }
+
+            .home-map-toolbar {
+                align-items: stretch;
+            }
+
+            .map-filter-group,
+            .map-help-btn,
+            .map-count-badge {
+                width: 100%;
+            }
+
+            .map-filter-btn {
+                flex: 1;
+                justify-content: center;
+            }
+
+            .map-help-inner {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                padding: 18px;
+            }
+
+            .map-help-main {
+                padding-right: 38px;
+            }
+
+            .map-help-steps {
+                grid-template-columns: 1fr;
+            }
+
+            .map-help-close {
+                position: absolute;
+                top: 16px;
+                right: 16px;
+            }
+
+            .map-help-note {
+                position: static;
+                margin: 0 18px 16px;
+            }
+        }
+    </style>
+@endpush
+
 @section('content')
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
@@ -59,6 +623,174 @@
         </div>
     </section>
 
+    <section class="py-20 px-5 sm:px-8 bg-brand-secondary">
+        <div class="max-w-6xl mx-auto">
+
+            <div class="text-center mb-12 reveal">
+                <p class="section-eyebrow mb-3">Peta Digital Kawasan</p>
+                <h2 class="section-title mb-4">
+                    Jelajahi Atraksi & UMKM Odeon
+                </h2>
+                <span class="gold-line mx-auto"></span>
+                <p class="text-brand-muted text-sm md:text-base max-w-2xl mx-auto mt-5 leading-relaxed">
+                    Temukan titik daya tarik wisata dan UMKM lokal di kawasan Odeon Kampoeng Naga melalui peta digital interaktif.
+                </p>
+            </div>
+
+            @php
+                $homeMapItems = collect();
+
+                foreach ($mapAttractions as $a) {
+                    $homeMapItems->push([
+                        'type' => 'atraksi',
+                        'typeLabel' => 'Atraksi',
+                        'name' => $a->name,
+                        'category' => $a->category,
+                        'description' => $a->excerpt ?? $a->description,
+                        'location' => $a->location_label,
+                        'image' => $a->main_image ? asset('storage/' . $a->main_image) : asset('assets/vihara.jpeg'),
+                        'latitude' => (float) $a->latitude,
+                        'longitude' => (float) $a->longitude,
+                        'url' => route('pages.atraksi-detail', $a->slug),
+                    ]);
+                }
+
+                foreach ($mapUmkms as $u) {
+                    $homeMapItems->push([
+                        'type' => 'umkm',
+                        'typeLabel' => 'UMKM',
+                        'name' => $u->name,
+                        'category' => $u->category,
+                        'description' => $u->description,
+                        'location' => $u->address,
+                        'image' => $u->main_image ? asset('storage/' . $u->main_image) : asset('assets/kopitiam.jpeg'),
+                        'price' => $u->price_start ? 'Mulai Rp ' . number_format($u->price_start, 0, ',', '.') : null,
+                        'isOpen' => $u->is_open,
+                        'latitude' => (float) $u->latitude,
+                        'longitude' => (float) $u->longitude,
+                        'url' => route('pages.umkm-detail', $u->id),
+                    ]);
+                }
+            @endphp
+
+            <div class="home-map-card reveal">
+
+                <div class="home-map-toolbar">
+                    <div class="map-filter-group" id="home-map-filters">
+                        <button type="button" class="map-filter-btn active" data-filter="all">
+                            <i class="iconoir-grid-plus"></i> Semua
+                        </button>
+
+                        <button type="button" class="map-filter-btn" data-filter="atraksi">
+                            <i class="iconoir-camera"></i> Atraksi
+                        </button>
+
+                        <button type="button" class="map-filter-btn" data-filter="umkm">
+                            <i class="iconoir-shop"></i> UMKM
+                        </button>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="map-count-badge" id="home-map-count">
+                            <i class="iconoir-map-pin"></i> Memuat titik...
+                        </span>
+
+                        <button type="button" class="map-help-btn" id="map-help-toggle">
+                            <i class="iconoir-info-circle"></i> Petunjuk
+                        </button>
+                    </div>
+                </div>
+
+                <div class="map-help-panel" id="map-help-panel">
+                    <div class="map-help-inner">
+
+                        <div class="map-help-main">
+                            <div class="map-help-icon">
+                                <i class="iconoir-map"></i>
+                            </div>
+
+                            <div>
+                                <div class="map-help-eyebrow">
+                                    <i class="iconoir-info-circle"></i>
+                                    Panduan Peta
+                                </div>
+
+                                <h4 class="map-help-title">
+                                    Jelajahi kawasan Odeon dengan lebih mudah
+                                </h4>
+
+                                <p class="map-help-desc">
+                                    Gunakan filter untuk memilih titik Atraksi atau UMKM, lalu klik marker untuk melihat popup ringkas sebelum masuk ke halaman detail.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="map-help-steps">
+
+                            <div class="map-help-step">
+                                <div class="map-help-step-number">01</div>
+                                <div class="map-help-step-text">
+                                    <strong>Pilih kategori</strong>
+                                    <span>Tampilkan semua titik, Atraksi saja, atau UMKM saja.</span>
+                                </div>
+                            </div>
+
+                            <div class="map-help-step">
+                                <div class="map-help-step-number">02</div>
+                                <div class="map-help-step-text">
+                                    <strong>Lihat marker</strong>
+                                    <span>Marker merah untuk Atraksi dan gold untuk UMKM.</span>
+                                </div>
+                            </div>
+
+                            <div class="map-help-step">
+                                <div class="map-help-step-number">03</div>
+                                <div class="map-help-step-text">
+                                    <strong>Klik titik</strong>
+                                    <span>Buka popup ringkas, lalu pilih tombol detail lokasi.</span>
+                                </div>
+                            </div>
+
+                            <div class="map-help-step">
+                                <div class="map-help-step-number">04</div>
+                                <div class="map-help-step-text">
+                                    <strong>Area terkunci</strong>
+                                    <span>Peta tetap fokus di kawasan Odeon Sukabumi.</span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <button type="button" class="map-help-close" id="map-help-close" aria-label="Tutup petunjuk">
+                            <i class="iconoir-xmark"></i>
+                        </button>
+
+                    </div>
+
+                    <div class="map-help-note">
+                        <i class="iconoir-spark-solid"></i>
+                        Petunjuk ini bisa ditutup dan dibuka kembali kapan saja.
+                    </div>
+                </div>
+
+                <div id="home-map"></div>
+            </div>
+
+            <div id="home-map-empty" class="hidden text-center py-16 max-w-sm mx-auto">
+                <div class="w-20 h-20 rounded-3xl bg-brand-accent/8 flex items-center justify-center mx-auto mb-5">
+                    <i class="iconoir-map-pin text-3xl text-brand-accent"></i>
+                </div>
+                <h3 class="font-serif text-2xl font-bold text-brand-text mb-2">
+                    Belum ada titik peta
+                </h3>
+                <p class="text-brand-muted text-sm">
+                    Pastikan data Atraksi dan UMKM sudah memiliki latitude dan longitude.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
     <div class="pt-12 pb-4 px-5 sm:px-8 reveal">
         <div class="max-w-6xl mx-auto">
 
@@ -100,7 +832,7 @@
                             alt="Suasana Odeon 2">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                         <div class="absolute bottom-6 left-6 right-6 text-white pb-2">
-                            <p class="text-xs font-semibold uppercase tracking-wider mb-2 text-red-300">UMKM dan Kuliner</p>
+                            <p class="text-xs font-semibold uppercase tracking-wider mb-2 text-red-300 notranslate">UMKM dan Kuliner</p>
                             <h3 class="font-serif text-2xl font-bold text-white mt-0 mb-0">Kopitiam Odeon</h3>
                         </div>
                     </div>
@@ -815,5 +1547,282 @@
 
         });
     </script>
+
+    @push('scripts')
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const mapItems = @json($homeMapItems);
+
+                const mapEl = document.getElementById('home-map');
+                const emptyBox = document.getElementById('home-map-empty');
+                const countEl = document.getElementById('home-map-count');
+
+                const filterButtons = document.querySelectorAll('#home-map-filters .map-filter-btn');
+
+                const helpPanel = document.getElementById('map-help-panel');
+                const helpToggle = document.getElementById('map-help-toggle');
+                const helpClose = document.getElementById('map-help-close');
+
+                if (!mapEl) return;
+
+                // Titik fallback sekitar kawasan Jalan Pajagalan / Odeon Sukabumi.
+                // Ini hanya dipakai kalau belum ada marker sama sekali.
+                const fallbackCenter = [-6.9256, 106.9297];
+
+                // Ambil semua koordinat marker dari database admin.
+                const allCoordinates = mapItems
+                    .filter(item => item.latitude && item.longitude)
+                    .map(item => [Number(item.latitude), Number(item.longitude)]);
+
+                // Kalau sudah ada marker, batas peta otomatis mengikuti marker.
+                // Kalau belum ada marker, pakai batas kecil sekitar fallbackCenter.
+                let odeonBounds;
+
+                if (allCoordinates.length > 0) {
+                    odeonBounds = L.latLngBounds(allCoordinates).pad(0.35);
+                } else {
+                    odeonBounds = L.latLngBounds(
+                        [fallbackCenter[0] - 0.004, fallbackCenter[1] - 0.004],
+                        [fallbackCenter[0] + 0.004, fallbackCenter[1] + 0.004]
+                    );
+                }
+
+                const odeonCenter = allCoordinates.length > 0
+                    ? odeonBounds.getCenter()
+                    : fallbackCenter;
+
+                const map = L.map('home-map', {
+                    center: odeonCenter,
+                    zoom: 17,
+                    minZoom: 15,
+                    maxZoom: 19,
+                    maxBounds: odeonBounds,
+                    maxBoundsViscosity: 0.9,
+                    scrollWheelZoom: false
+                });
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; OpenStreetMap contributors'
+                }).addTo(map);
+
+                const markerLayer = L.layerGroup().addTo(map);
+
+                let currentFilter = 'all';
+
+                function createMarkerIcon(type) {
+                    const isAttraction = type === 'atraksi';
+
+                    return L.divIcon({
+                        className: '',
+                        html: `
+                            <div class="odeon-marker ${isAttraction ? 'attraction' : 'umkm'}">
+                                <i class="${isAttraction ? 'iconoir-camera' : 'iconoir-shop'}"></i>
+                            </div>
+                        `,
+                        iconSize: [44, 44],
+                        iconAnchor: [22, 44],
+                        tooltipAnchor: [0, -40],
+                        popupAnchor: [0, -44]
+                    });
+                }
+
+                function markerLabel(item) {
+                    return `${item.typeLabel}: ${item.name}`;
+                }
+
+                function escapeHtml(value) {
+                    return String(value ?? '')
+                        .replaceAll('&', '&amp;')
+                        .replaceAll('<', '&lt;')
+                        .replaceAll('>', '&gt;')
+                        .replaceAll('"', '&quot;')
+                        .replaceAll("'", '&#039;');
+                }
+
+                function popupHtml(item) {
+                    const isAttraction = item.type === 'atraksi';
+
+                    const typeClass = isAttraction ? 'attraction' : 'umkm';
+                    const typeIcon = isAttraction ? 'iconoir-camera' : 'iconoir-shop';
+                    const detailText = isAttraction ? 'Detail' : 'Detail';
+
+                    const chipText = isAttraction
+                        ? (item.category || 'Atraksi')
+                        : (item.price || item.category || 'UMKM');
+
+                    return `
+                        <div class="odeon-popup-card">
+                            <div class="odeon-popup-top">
+                                <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}"
+                                    onerror="this.src='https://placehold.co/400x250?text=No+Image'">
+
+                                <div class="odeon-popup-badge ${typeClass}">
+                                    <i class="${typeIcon}"></i>
+                                    ${escapeHtml(item.typeLabel)}
+                                </div>
+                            </div>
+
+                            <div class="odeon-popup-body">
+                                <h3 class="odeon-popup-title">
+                                    ${escapeHtml(item.name)}
+                                </h3>
+
+                                <p class="odeon-popup-desc">
+                                    ${escapeHtml(item.description || 'Lokasi menarik di kawasan Odeon Kampoeng Naga.')}
+                                </p>
+
+                                <div class="odeon-popup-meta">
+                                    <i class="iconoir-map-pin"></i>
+                                    <span>${escapeHtml(item.location || 'Kawasan Odeon Sukabumi')}</span>
+                                </div>
+
+                                <div class="odeon-popup-footer">
+                                    <div class="odeon-popup-chip">
+                                        ${escapeHtml(chipText)}
+                                    </div>
+
+                                    <a href="${escapeHtml(item.url)}" class="odeon-popup-link">
+                                        ${detailText}
+                                        <i class="iconoir-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                function renderMarkers() {
+                    markerLayer.clearLayers();
+
+                    const visibleItems = mapItems.filter(item => {
+                        return currentFilter === 'all' || item.type === currentFilter;
+                    });
+
+                    if (countEl) {
+                        const label = currentFilter === 'all'
+                            ? 'Semua titik'
+                            : currentFilter === 'atraksi'
+                                ? 'Titik Atraksi'
+                                : 'Titik UMKM';
+
+                        countEl.innerHTML = `<i class="iconoir-map-pin"></i> ${visibleItems.length} ${label}`;
+                    }
+
+                    if (!visibleItems.length) {
+                        if (emptyBox) emptyBox.classList.remove('hidden');
+                        map.fitBounds(odeonBounds, {
+                            padding: [40, 40],
+                            maxZoom: 17
+                        });
+                        return;
+                    }
+
+                    if (emptyBox) emptyBox.classList.add('hidden');
+
+                    const bounds = [];
+
+                    visibleItems.forEach(item => {
+                        const marker = L.marker([item.latitude, item.longitude], {
+                            icon: createMarkerIcon(item.type),
+                            title: markerLabel(item)
+                        });
+
+                    marker.bindTooltip(markerLabel(item), {
+                        direction: 'top',
+                        offset: [0, -10]
+                    });
+
+                    marker.bindPopup(popupHtml(item), {
+                        className: 'odeon-map-popup',
+                        maxWidth: 230,
+                        minWidth: 220,
+                        closeButton: true,
+                        autoPan: true,
+                        autoPanPadding: [22, 22]
+                    });
+
+                    marker.on('click', () => {
+                        marker.openPopup();
+
+                        map.flyTo([item.latitude, item.longitude], Math.max(map.getZoom(), 18), {
+                            animate: true,
+                            duration: 0.55
+                        });
+                    });
+
+                    marker.addTo(markerLayer);
+                    bounds.push([item.latitude, item.longitude]);
+                    });
+
+                    if (bounds.length > 1) {
+                        const fitBounds = L.latLngBounds(bounds).pad(0.25);
+
+                        map.fitBounds(fitBounds, {
+                            padding: [55, 55],
+                            maxZoom: 18
+                        });
+                    } else {
+                        map.setView(bounds[0], 18);
+                    }
+                }
+
+                filterButtons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        filterButtons.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+
+                        currentFilter = btn.dataset.filter || 'all';
+
+                        renderMarkers();
+                    });
+                });
+
+                /*
+                    Petunjuk penggunaan bisa ditutup dan dimunculkan lagi.
+                    Status disimpan di localStorage supaya kalau user refresh,
+                    pilihan terakhir tetap tersimpan.
+                */
+                const savedHelpState = localStorage.getItem('odeon_map_help_hidden');
+
+                if (savedHelpState === 'true') {
+                    helpPanel?.classList.add('hidden');
+                }
+
+                helpClose?.addEventListener('click', () => {
+                    helpPanel?.classList.add('hidden');
+                    localStorage.setItem('odeon_map_help_hidden', 'true');
+                });
+
+                helpToggle?.addEventListener('click', () => {
+                    helpPanel?.classList.toggle('hidden');
+
+                    const isHidden = helpPanel?.classList.contains('hidden');
+                    localStorage.setItem('odeon_map_help_hidden', isHidden ? 'true' : 'false');
+                });
+
+                /*
+                    Kalau user maksa geser keluar batas,
+                    peta akan dikembalikan ke kawasan Odeon.
+                */
+                map.on('dragend', () => {
+                    if (!odeonBounds.contains(map.getCenter())) {
+                        map.panInsideBounds(odeonBounds, {
+                            animate: true
+                        });
+                    }
+                });
+
+                map.fitBounds(odeonBounds, {
+                    padding: [40, 40],
+                    maxZoom: 17
+                });
+
+                renderMarkers();
+            });
+        </script>
+    @endpush
 
 @endsection

@@ -51,6 +51,8 @@ class UmkmController extends Controller
             'close_time' => 'required',
             'price_start' => 'required|numeric',
             'address' => 'required',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
             'whatsapp' => 'required',
             'main_image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
@@ -91,6 +93,8 @@ class UmkmController extends Controller
             'price_start' => $request->price_start,
             'address' => $request->address,
             'gmaps_url' => $request->gmaps_url,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
             'whatsapp' => $request->whatsapp,
             'main_image' => $mainImage,
             'gallery' => $gallery,
@@ -116,6 +120,22 @@ class UmkmController extends Controller
     public function update(Request $request, string $id)
     {
         $umkm = Umkm::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required',
+            'owner_highlight' => 'required',
+            'slogan' => 'required',
+            'category' => 'required',
+            'description' => 'required',
+            'open_time' => 'required',
+            'close_time' => 'required',
+            'price_start' => 'required|numeric',
+            'address' => 'required',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
+            'whatsapp' => 'required',
+            'main_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
 
         $mainImage = $umkm->main_image;
 
@@ -162,6 +182,8 @@ class UmkmController extends Controller
             'price_start' => $request->price_start,
             'address' => $request->address,
             'gmaps_url' => $request->gmaps_url,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
             'whatsapp' => $request->whatsapp,
             'main_image' => $mainImage,
             'gallery' => $gallery,

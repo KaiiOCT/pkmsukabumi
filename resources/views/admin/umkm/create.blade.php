@@ -130,6 +130,7 @@
                             <input type="text" name="address" required placeholder="Contoh: Jl. Pajagalan No. 42"
                                 class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent/20">
                         </div>
+                        
                         <div>
                             <label
                                 class="block text-sm font-bold text-brand-text dark:text-white mb-2 flex items-center gap-1.5">Link
@@ -137,6 +138,33 @@
                             <input type="url" name="gmaps_url" placeholder="https://maps.google.com/..."
                                 class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent/20">
                         </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                        <div>
+                            <label class="block text-sm font-bold text-brand-text dark:text-white mb-2">
+                                Latitude
+                            </label>
+                            <input type="text" name="latitude" value="{{ old('latitude') }}"
+                                placeholder="Contoh: -6.9181234"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent/20">
+                            <p class="text-[10px] text-brand-muted mt-2">
+                                Isi titik lintang lokasi UMKM.
+                            </p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-brand-text dark:text-white mb-2">
+                                Longitude
+                            </label>
+                            <input type="text" name="longitude" value="{{ old('longitude') }}"
+                                placeholder="Contoh: 106.9271234"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-[#0A0505] text-brand-text dark:text-white outline-none focus:ring-2 focus:ring-brand-accent/20">
+                            <p class="text-[10px] text-brand-muted mt-2">
+                                Isi titik bujur lokasi UMKM.
+                            </p>
+                        </div>
+                    </div>
                     </div>
                     <div>
                         <label

@@ -27,6 +27,9 @@ class Attraction extends Model
 
         'google_maps_url',
 
+        'latitude',
+        'longitude',
+
         'main_image',
     ];
 
@@ -35,4 +38,3 @@ class Attraction extends Model
         return $this->hasMany(AttractionGallery::class);
     }
 }
-

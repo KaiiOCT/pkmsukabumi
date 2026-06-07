@@ -5,7 +5,6 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
-use App\Http\Controllers\AttractionControllers;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\UmkmController;
@@ -66,15 +65,4 @@ Route::group(['middleware' => ['auth', 'role:Admin']], function(){
     });
 });
 
-Route::prefix('admin')
-    ->name('admin.')
-    ->middleware(['auth', 'role:Admin'])
-    ->group(function () {
-
-        Route::resource(
-            'attractions',
-            AttractionController::class
-        );
-
-    });
 

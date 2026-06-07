@@ -25,6 +25,8 @@ class Umkm extends Model
 
         'address',
         'gmaps_url',
+        'latitude',
+        'longitude',
         'whatsapp',
 
         'main_image',

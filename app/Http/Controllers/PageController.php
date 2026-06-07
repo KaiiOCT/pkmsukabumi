@@ -52,11 +52,13 @@ class PageController extends Controller
 
     public function atraksiDetail($slug)
     {
-        $attraction = Attraction::where('slug', $slug)->firstOrFail();
+        $attraction = Attraction::with('galleries')
+            ->where('slug', $slug)
+            ->firstOrFail();
 
         return view('pages.atraksi-detail', compact('attraction'));
     }
-
+    
     public function berita(Request $request)
     {
         $query = News::where('status', 'publish');

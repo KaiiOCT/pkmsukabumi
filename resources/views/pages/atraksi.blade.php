@@ -90,137 +90,75 @@
         </div>
     </section>
 
-
     <section class="pb-24 px-5 sm:px-8">
         <div class="max-w-6xl mx-auto">
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7" id="atraksi-grid">
 
-                @php
-                    $atraksi = [
-                        [
-                            'image' => 'assets/museum.jpeg',
-                            'category' => 'ikonik',
-                            'title' => 'Gapura Utama Odeon',
-                            'badge' => 'Ikonik',
-                            'desc' =>
-                                'Gerbang masuk utama yang memancarkan arsitektur oriental klasik nan megah. Menjadi spot foto terfavorit karena nilai historisnya sebagai penanda batas kultural sejak zaman Belanda.',
-                            'search' => 'gapura utama odeon ikonik sejarah',
-                        ],
-                        [
-                            'image' => 'assets/vihara.jpeg',
-                            'category' => 'budaya',
-                            'title' => 'Vihara Widhi Sakti',
-                            'badge' => 'Religi & Budaya',
-                            'desc' =>
-                                'Salah satu kelenteng tertua di Kota Sukabumi. Berdiri dengan desain kaya pilar naga melilit, tempat suci bagi umat Buddha ini terbuka bagi pengunjung dari semua kalangan.',
-                            'search' => 'vihara widhi sakti kelenteng ibadah',
-                        ],
-                        [
-                            'image' => 'assets/lorong.jpeg',
-                            'category' => 'lokal',
-                            'title' => 'Lorong Lampion Merah',
-                            'badge' => 'Suasana Lokal',
-                            'desc' =>
-                                'Ruas jalan yang menjadi lautan lampion saat malam hari. Suasana meriah ditemani temaram cahaya merah muda menjadi pelarian bagi para pencari estetika perkotaan.',
-                            'search' => 'lorong lampion merah malam estetika',
-                        ],
-                        [
-                            'image' => 'assets/pertunjukan.jpeg',
-                            'category' => 'hiburan',
-                            'title' => 'Pertunjukan Barongsai',
-                            'badge' => 'Hiburan & Acara',
-                            'desc' =>
-                                'Akrobatik tradisional perwujudan singa naga yang memukau. Kerap memeriahkan area jalan setiap festival Cap Go Meh yang sukses menarik ribuan pengunjung lokal.',
-                            'search' => 'pertunjukan barongsai seni singa naga cap go meh',
-                        ],
-                        [
-                            'image' => 'assets/kopitiam.jpeg',
-                            'category' => 'lokal',
-                            'title' => 'Kopitiam Sudut Kota',
-                            'badge' => 'Suasana Lokal',
-                            'desc' =>
-                                'Nikmati sentuhan masa lampau melalui barisan kedai klasik pinggir jalan yang ramah dan tak lekang oleh waktu. Tempat meleburnya para pewaris sejarah dan pemuda kota.',
-                            'search' => 'kopitiam sudut kota warung kopi tongkrongan',
-                        ],
-                        [
-                            'image' =>
-                                'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=800&auto=format&fit=crop',
-                            'category' => 'hiburan',
-                            'title' => 'Pasar Kuliner Senggol',
-                            'badge' => 'Hiburan & Acara',
-                            'desc' =>
-                                'Beragam sajian akulturasi di hamparan tenda yang digelar pada akhir pekan. Aroma makanan oriental dan bumbu selera Nusantara mengundang penikmat santap senja.',
-                            'search' => 'pasar kuliner senggol belanja bazar',
-                        ],
-                    ];
-                @endphp
+                @foreach ($attractions as $a)
+                    <article class="atraksi-item card group flex flex-col cursor-pointer reveal"
+                        data-category="{{ trim($a->category) }}"
+                        data-title="{{ strtolower($a->name . ' ' . $a->description . ' ' . $a->category) }}">
 
-            @foreach ($attractions as $a)
-                <article class="atraksi-item card group flex flex-col cursor-pointer reveal"
-                    data-category="{{ trim($a->category) }}"
-                    data-title="{{ strtolower($a->name . ' ' . $a->description) }}">
+                        <div class="card-image h-60">
+                            <img src="{{ asset('storage/' . $a->main_image) }}"
+                                alt="{{ $a->name }}"
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                onerror="this.src='https://placehold.co/600x400?text=No+Image'">
 
-                    <div class="card-image h-60">
-                        <img src="{{ asset('storage/' . $a->main_image) }}"
-                            alt="{{ $a->name }}"
-                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                            onerror="this.src='https://placehold.co/600x400?text=No+Image'">
+                            <div class="absolute inset-0 bg-gradient-card pointer-events-none"></div>
 
-                        <div class="absolute inset-0 bg-gradient-card pointer-events-none"></div>
-
-                        <div class="absolute top-3 left-3">
-                            <span class="badge badge-white text-[10px]">
-                                {{ $a->category }}
-                            </span>
-                        </div>
-
-                        <div
-                            class="absolute inset-0 flex items-end p-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-
-                            <a href="{{ route('pages.atraksi-detail', $a->slug) }}"
-                                class="w-full text-center py-3 rounded-xl bg-white/90 backdrop-blur-sm
-                                text-brand-accent text-sm font-bold no-underline
-                                hover:bg-white transition-colors duration-200">
-
-                                Lihat Detail
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="card-body flex flex-col flex-1">
-                        <h3 class="font-serif text-xl font-bold text-brand-text mb-2.5 mt-0 leading-snug">
-
-                            <a href="{{ route('pages.atraksi-detail', $a->slug) }}"
-                                class="no-underline text-inherit">
-
-                                {{ $a->name}}
-                            </a>
-                        </h3>
-
-                        <p class="text-sm text-brand-muted leading-relaxed mb-5 flex-1 line-clamp-3">
-                            {{ $a->description }}
-                        </p>
-
-                        <div class="mt-auto flex items-center justify-between border-t border-gray-100 pt-4">
-
-                            <a href="{{ route('pages.atraksi-detail', $a->slug) }}"
-                                class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-accent no-underline">
-
-                                Selengkapnya
-                            </a>
-
-                            <div class="flex items-center gap-1.5">
-                                <i class="iconoir-heart-solid text-rose-500 text-lg"></i>
-
-                                <span class="text-xs font-bold text-gray-600">
-                                    {{ rand(120, 999) }}
+                            <div class="absolute top-3 left-3">
+                                <span class="badge badge-white text-[10px]">
+                                    {{ $a->category }}
                                 </span>
                             </div>
+
+                            <div
+                                class="absolute inset-0 flex items-end p-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+
+                                <a href="{{ route('pages.atraksi-detail', $a->slug) }}"
+                                    class="w-full text-center py-3 rounded-xl bg-white/90 backdrop-blur-sm
+                                    text-brand-accent text-sm font-bold no-underline
+                                    hover:bg-white transition-colors duration-200">
+
+                                    Lihat Detail
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                </article>
-            @endforeach
+
+                        <div class="card-body flex flex-col flex-1">
+                            <h3 class="font-serif text-xl font-bold text-brand-text mb-2.5 mt-0 leading-snug">
+
+                                <a href="{{ route('pages.atraksi-detail', $a->slug) }}"
+                                    class="no-underline text-inherit">
+
+                                    {{ $a->name }}
+                                </a>
+                            </h3>
+
+                            <p class="text-sm text-brand-muted leading-relaxed mb-5 flex-1 line-clamp-3">
+                                {{ $a->description }}
+                            </p>
+
+                            <div class="mt-auto flex items-center justify-between border-t border-gray-100 pt-4">
+
+                                <a href="{{ route('pages.atraksi-detail', $a->slug) }}"
+                                    class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-accent no-underline">
+                                    Selengkapnya
+                                </a>
+
+                                <div class="flex items-center gap-1.5">
+                                    <i class="iconoir-heart-solid text-rose-500 text-lg"></i>
+
+                                    <span class="text-xs font-bold text-gray-600">
+                                        {{ rand(120, 999) }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                @endforeach
 
             </div>
 
@@ -231,9 +169,9 @@
                 <h3 class="font-serif text-2xl font-bold text-brand-text mb-2">Tidak ditemukan</h3>
                 <p class="text-brand-muted text-sm">Coba kata kunci atau kategori yang berbeda.</p>
             </div>
+
         </div>
     </section>
-
 
     <section class="py-20 px-5 sm:px-8 bg-brand-secondary">
         <div class="max-w-6xl mx-auto">
@@ -327,89 +265,78 @@
 
     @push('scripts')
         <script>
-        document.addEventListener('DOMContentLoaded', () => {
+            document.addEventListener('DOMContentLoaded', () => {
 
-            const filterBtns = document.querySelectorAll('#atraksi-filters .filter-pill');
-            const items = document.querySelectorAll('.atraksi-item');
-            const searchEl = document.getElementById('search-input');
-            const clearBtn = document.getElementById('clear-search');
-            const noResult = document.getElementById('no-result');
+                const filterBtns = document.querySelectorAll('#atraksi-filters .filter-pill');
+                const items = document.querySelectorAll('.atraksi-item');
+                const searchEl = document.getElementById('search-input');
+                const clearBtn = document.getElementById('clear-search');
+                const noResult = document.getElementById('no-result');
 
-            let currentFilter = 'all';
-            let currentSearch = '';
+                let currentFilter = 'all';
+                let currentSearch = '';
 
-            function updateDisplay() {
+                function updateDisplay() {
+                    let found = false;
 
-                let found = false;
+                    items.forEach(item => {
+                        const itemCategory = item.dataset.category.trim().toLowerCase();
+                        const itemTitle = item.dataset.title.toLowerCase();
 
-                items.forEach(item => {
+                        const categoryMatch =
+                            currentFilter === 'all' ||
+                            itemCategory === currentFilter;
 
-                    const itemCategory = item.dataset.category.trim();
-                    const itemTitle = item.dataset.title.toLowerCase();
+                        const searchMatch = itemTitle.includes(currentSearch);
 
-                    const categoryMatch =
-                        currentFilter === 'all' ||
-                        itemCategory === currentFilter;
+                        if (categoryMatch && searchMatch) {
+                            item.style.display = 'flex';
+                            found = true;
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
 
-                    const searchMatch =
-                        itemTitle.includes(currentSearch);
-
-                    if (categoryMatch && searchMatch) {
-
-                        item.style.display = 'flex';
-                        found = true;
-
+                    if (found) {
+                        noResult.classList.add('hidden');
                     } else {
-
-                        item.style.display = 'none';
+                        noResult.classList.remove('hidden');
                     }
+                }
+
+                filterBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        filterBtns.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+
+                        currentFilter = String(btn.dataset.target || 'all').trim().toLowerCase();
+
+                        updateDisplay();
+                    });
                 });
 
-                if (found) {
-                    noResult.classList.add('hidden');
-                } else {
-                    noResult.classList.remove('hidden');
-                }
-            }
+                searchEl.addEventListener('input', (e) => {
+                    currentSearch = e.target.value.toLowerCase().trim();
 
-            filterBtns.forEach(btn => {
-
-                btn.addEventListener('click', () => {
-
-                    filterBtns.forEach(b => b.classList.remove('active'));
-
-                    btn.classList.add('active');
-
-                    currentFilter = btn.dataset.target;
+                    if (currentSearch.length > 0) {
+                        clearBtn.classList.remove('hidden');
+                    } else {
+                        clearBtn.classList.add('hidden');
+                    }
 
                     updateDisplay();
                 });
-            });
 
-            searchEl.addEventListener('input', (e) => {
+                clearBtn.addEventListener('click', () => {
+                    searchEl.value = '';
+                    currentSearch = '';
 
-                currentSearch = e.target.value.toLowerCase();
-
-                if (currentSearch.length > 0) {
-                    clearBtn.classList.remove('hidden');
-                } else {
                     clearBtn.classList.add('hidden');
-                }
 
-                updateDisplay();
+                    updateDisplay();
+                });
+
             });
-
-            clearBtn.addEventListener('click', () => {
-
-                searchEl.value = '';
-                currentSearch = '';
-
-                clearBtn.classList.add('hidden');
-
-                updateDisplay();
-            });
-
-        });
         </script>
     @endpush
 

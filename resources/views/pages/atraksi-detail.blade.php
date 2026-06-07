@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
-@section('title', $attraction->title . ' | Daya Tarik Wisata Kampoeng Naga')
-@section('meta_description', $attraction->short_description)
+@section('title', $attraction->name . ' | Daya Tarik Wisata Kampoeng Naga')
+@section('meta_description', $attraction->excerpt)
 
 @section('content')
 
@@ -24,7 +24,7 @@
                 <a href="{{ route('pages.atraksi') }}"
                     class="no-underline hover:text-white transition-colors duration-200">Daya Tarik Wisata</a>
                 <i class="iconoir-nav-arrow-right text-sm opacity-50"></i>
-                <span class="text-brand-gold">{{ $attraction->title }}</span>
+                <span class="text-brand-gold">{{ $attraction->name }}</span>
             </div>
         </div>
 
@@ -42,11 +42,23 @@
             <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-8">
                 <div>
                     <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="badge badge-accent"><i class="iconoir-camera text-xs"></i> Ikonik</span>
-                        <span class="badge bg-amber-50 text-amber-700 border border-amber-200"><i
-                                class="iconoir-camera text-xs"></i> Foto Terfavorit</span>
-                        <span class="badge bg-emerald-50 text-emerald-700 border border-emerald-200"><i
-                                class="iconoir-map-pin text-xs"></i> {{ $attraction->location_label }}</span>
+                        @if ($attraction->category)
+                            <span class="badge badge-accent">
+                                <i class="iconoir-camera text-xs"></i> {{ $attraction->category }}
+                            </span>
+                        @endif
+
+                        @if ($attraction->special_badge)
+                            <span class="badge bg-amber-50 text-amber-700 border border-amber-200">
+                                <i class="iconoir-star-solid text-xs"></i> {{ $attraction->special_badge }}
+                            </span>
+                        @endif
+
+                        @if ($attraction->location_label)
+                            <span class="badge bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                <i class="iconoir-map-pin text-xs"></i> {{ $attraction->location_label }}
+                            </span>
+                        @endif
                     </div>
                     <h1
                         class="font-serif text-4xl md:text-5xl lg:text-[56px] font-bold text-brand-text leading-tight mt-0 mb-3">
@@ -71,7 +83,7 @@
                 </div>
             </div>
 
-            <a href="{{ asset('storage/' . $attraction->main_image) }}" data-fancybox="main-cover" data-caption="Gapura Utama Odeon"
+            <a href="{{ asset('storage/' . $attraction->main_image) }}" data-fancybox="main-cover" data-caption="{{ $attraction->name }}"
                 class="relative block rounded-[2rem] overflow-hidden h-[300px] md:h-[450px] lg:h-[550px] shadow-card-hover w-full group cursor-zoom-in">
                 <img src="{{ asset('storage/' . $attraction->main_image) }}" alt="{{ $attraction->name }}"
                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -215,13 +227,13 @@
                         </p>
 
                         <div class="flex flex-col gap-3">
-                            <a href="https://maps.app.goo.gl/MtyHtXzbVS5BBfcV6"
+                            <a href="{{ $attraction->google_maps_url ?? '#' }}"
                             target="_blank"
                             class="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 text-sm font-bold hover:bg-amber-100 hover:border-amber-300 transition-all duration-300 no-underline">
                                 Beri Ulasan
                             </a>
 
-                            <a href="https://maps.app.goo.gl/MtyHtXzbVS5BBfcV6"
+                            <a href="{{ $attraction->google_maps_url ?? '#' }}"
                             target="_blank"
                             class="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl border border-gray-200 text-brand-muted text-sm font-bold hover:border-brand-accent hover:text-brand-accent transition-all duration-300 no-underline">
                                 Buka Titik Maps
@@ -299,8 +311,8 @@
         function shareAttraction() {
             if (navigator.share) {
                 navigator.share({
-                    title: '{{ $attraction->title }} | Atraksi Kampoeng Naga',
-                    text: '{{ $attraction->short_description }}',
+                    title: @js($attraction->name . ' | Atraksi Kampoeng Naga'),
+                    text: @js($attraction->excerpt),
                     url: window.location.href,
                 }).catch((error) => console.log('Error sharing', error));
             } else {
