@@ -623,174 +623,6 @@
         </div>
     </section>
 
-    <section class="py-20 px-5 sm:px-8 bg-brand-secondary">
-        <div class="max-w-6xl mx-auto">
-
-            <div class="text-center mb-12 reveal">
-                <p class="section-eyebrow mb-3">Peta Digital Kawasan</p>
-                <h2 class="section-title mb-4">
-                    Jelajahi Atraksi & UMKM Odeon
-                </h2>
-                <span class="gold-line mx-auto"></span>
-                <p class="text-brand-muted text-sm md:text-base max-w-2xl mx-auto mt-5 leading-relaxed">
-                    Temukan titik daya tarik wisata dan UMKM lokal di kawasan Odeon Kampoeng Naga melalui peta digital interaktif.
-                </p>
-            </div>
-
-            @php
-                $homeMapItems = collect();
-
-                foreach ($mapAttractions as $a) {
-                    $homeMapItems->push([
-                        'type' => 'atraksi',
-                        'typeLabel' => 'Atraksi',
-                        'name' => $a->name,
-                        'category' => $a->category,
-                        'description' => $a->excerpt ?? $a->description,
-                        'location' => $a->location_label,
-                        'image' => $a->main_image ? asset('storage/' . $a->main_image) : asset('assets/vihara.jpeg'),
-                        'latitude' => (float) $a->latitude,
-                        'longitude' => (float) $a->longitude,
-                        'url' => route('pages.atraksi-detail', $a->slug),
-                    ]);
-                }
-
-                foreach ($mapUmkms as $u) {
-                    $homeMapItems->push([
-                        'type' => 'umkm',
-                        'typeLabel' => 'UMKM',
-                        'name' => $u->name,
-                        'category' => $u->category,
-                        'description' => $u->description,
-                        'location' => $u->address,
-                        'image' => $u->main_image ? asset('storage/' . $u->main_image) : asset('assets/kopitiam.jpeg'),
-                        'price' => $u->price_start ? 'Mulai Rp ' . number_format($u->price_start, 0, ',', '.') : null,
-                        'isOpen' => $u->is_open,
-                        'latitude' => (float) $u->latitude,
-                        'longitude' => (float) $u->longitude,
-                        'url' => route('pages.umkm-detail', $u->id),
-                    ]);
-                }
-            @endphp
-
-            <div class="home-map-card reveal">
-
-                <div class="home-map-toolbar">
-                    <div class="map-filter-group" id="home-map-filters">
-                        <button type="button" class="map-filter-btn active" data-filter="all">
-                            <i class="iconoir-grid-plus"></i> Semua
-                        </button>
-
-                        <button type="button" class="map-filter-btn" data-filter="atraksi">
-                            <i class="iconoir-camera"></i> Atraksi
-                        </button>
-
-                        <button type="button" class="map-filter-btn" data-filter="umkm">
-                            <i class="iconoir-shop"></i> UMKM
-                        </button>
-                    </div>
-
-                    <div class="flex flex-wrap items-center gap-2">
-                        <span class="map-count-badge" id="home-map-count">
-                            <i class="iconoir-map-pin"></i> Memuat titik...
-                        </span>
-
-                        <button type="button" class="map-help-btn" id="map-help-toggle">
-                            <i class="iconoir-info-circle"></i> Petunjuk
-                        </button>
-                    </div>
-                </div>
-
-                <div class="map-help-panel" id="map-help-panel">
-                    <div class="map-help-inner">
-
-                        <div class="map-help-main">
-                            <div class="map-help-icon">
-                                <i class="iconoir-map"></i>
-                            </div>
-
-                            <div>
-                                <div class="map-help-eyebrow">
-                                    <i class="iconoir-info-circle"></i>
-                                    Panduan Peta
-                                </div>
-
-                                <h4 class="map-help-title">
-                                    Jelajahi kawasan Odeon dengan lebih mudah
-                                </h4>
-
-                                <p class="map-help-desc">
-                                    Gunakan filter untuk memilih titik Atraksi atau UMKM, lalu klik marker untuk melihat popup ringkas sebelum masuk ke halaman detail.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="map-help-steps">
-
-                            <div class="map-help-step">
-                                <div class="map-help-step-number">01</div>
-                                <div class="map-help-step-text">
-                                    <strong>Pilih kategori</strong>
-                                    <span>Tampilkan semua titik, Atraksi saja, atau UMKM saja.</span>
-                                </div>
-                            </div>
-
-                            <div class="map-help-step">
-                                <div class="map-help-step-number">02</div>
-                                <div class="map-help-step-text">
-                                    <strong>Lihat marker</strong>
-                                    <span>Marker merah untuk Atraksi dan gold untuk UMKM.</span>
-                                </div>
-                            </div>
-
-                            <div class="map-help-step">
-                                <div class="map-help-step-number">03</div>
-                                <div class="map-help-step-text">
-                                    <strong>Klik titik</strong>
-                                    <span>Buka popup ringkas, lalu pilih tombol detail lokasi.</span>
-                                </div>
-                            </div>
-
-                            <div class="map-help-step">
-                                <div class="map-help-step-number">04</div>
-                                <div class="map-help-step-text">
-                                    <strong>Area terkunci</strong>
-                                    <span>Peta tetap fokus di kawasan Odeon Sukabumi.</span>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <button type="button" class="map-help-close" id="map-help-close" aria-label="Tutup petunjuk">
-                            <i class="iconoir-xmark"></i>
-                        </button>
-
-                    </div>
-
-                    <div class="map-help-note">
-                        <i class="iconoir-spark-solid"></i>
-                        Petunjuk ini bisa ditutup dan dibuka kembali kapan saja.
-                    </div>
-                </div>
-
-                <div id="home-map"></div>
-            </div>
-
-            <div id="home-map-empty" class="hidden text-center py-16 max-w-sm mx-auto">
-                <div class="w-20 h-20 rounded-3xl bg-brand-accent/8 flex items-center justify-center mx-auto mb-5">
-                    <i class="iconoir-map-pin text-3xl text-brand-accent"></i>
-                </div>
-                <h3 class="font-serif text-2xl font-bold text-brand-text mb-2">
-                    Belum ada titik peta
-                </h3>
-                <p class="text-brand-muted text-sm">
-                    Pastikan data Atraksi dan UMKM sudah memiliki latitude dan longitude.
-                </p>
-            </div>
-
-        </div>
-    </section>
-
     <div class="pt-12 pb-4 px-5 sm:px-8 reveal">
         <div class="max-w-6xl mx-auto">
 
@@ -1305,7 +1137,175 @@
         </div>
     </div>
 
-    <section class="py-20 px-5 sm:px-8 bg-brand-secondary">
+        <section class="py-20 px-5 sm:px-8 bg-brand-secondary">
+        <div class="max-w-6xl mx-auto">
+
+            <div class="text-center mb-12 reveal">
+                <p class="section-eyebrow mb-3">Peta Digital Kawasan</p>
+                <h2 class="section-title mb-4">
+                    Jelajahi Atraksi & UMKM Odeon
+                </h2>
+                <span class="gold-line mx-auto"></span>
+                <p class="text-brand-muted text-sm md:text-base max-w-2xl mx-auto mt-5 leading-relaxed">
+                    Temukan titik daya tarik wisata dan UMKM lokal di kawasan Odeon Kampoeng Naga melalui peta digital interaktif.
+                </p>
+            </div>
+
+            @php
+                $homeMapItems = collect();
+
+                foreach ($mapAttractions as $a) {
+                    $homeMapItems->push([
+                        'type' => 'atraksi',
+                        'typeLabel' => 'Atraksi',
+                        'name' => $a->name,
+                        'category' => $a->category,
+                        'description' => $a->excerpt ?? $a->description,
+                        'location' => $a->location_label,
+                        'image' => $a->main_image ? asset('storage/' . $a->main_image) : asset('assets/vihara.jpeg'),
+                        'latitude' => (float) $a->latitude,
+                        'longitude' => (float) $a->longitude,
+                        'url' => route('pages.atraksi-detail', $a->slug),
+                    ]);
+                }
+
+                foreach ($mapUmkms as $u) {
+                    $homeMapItems->push([
+                        'type' => 'umkm',
+                        'typeLabel' => 'UMKM',
+                        'name' => $u->name,
+                        'category' => $u->category,
+                        'description' => $u->description,
+                        'location' => $u->address,
+                        'image' => $u->main_image ? asset('storage/' . $u->main_image) : asset('assets/kopitiam.jpeg'),
+                        'price' => $u->price_start ? 'Mulai Rp ' . number_format($u->price_start, 0, ',', '.') : null,
+                        'isOpen' => $u->is_open,
+                        'latitude' => (float) $u->latitude,
+                        'longitude' => (float) $u->longitude,
+                        'url' => route('pages.umkm-detail', $u->id),
+                    ]);
+                }
+            @endphp
+
+            <div class="home-map-card reveal">
+
+                <div class="home-map-toolbar">
+                    <div class="map-filter-group" id="home-map-filters">
+                        <button type="button" class="map-filter-btn active" data-filter="all">
+                            <i class="iconoir-grid-plus"></i> Semua
+                        </button>
+
+                        <button type="button" class="map-filter-btn" data-filter="atraksi">
+                            <i class="iconoir-camera"></i> Atraksi
+                        </button>
+
+                        <button type="button" class="map-filter-btn" data-filter="umkm">
+                            <i class="iconoir-shop"></i> UMKM
+                        </button>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="map-count-badge" id="home-map-count">
+                            <i class="iconoir-map-pin"></i> Memuat titik...
+                        </span>
+
+                        <button type="button" class="map-help-btn" id="map-help-toggle">
+                            <i class="iconoir-info-circle"></i> Petunjuk
+                        </button>
+                    </div>
+                </div>
+
+                <div class="map-help-panel" id="map-help-panel">
+                    <div class="map-help-inner">
+
+                        <div class="map-help-main">
+                            <div class="map-help-icon">
+                                <i class="iconoir-map"></i>
+                            </div>
+
+                            <div>
+                                <div class="map-help-eyebrow">
+                                    <i class="iconoir-info-circle"></i>
+                                    Panduan Peta
+                                </div>
+
+                                <h4 class="map-help-title">
+                                    Jelajahi kawasan Odeon dengan lebih mudah
+                                </h4>
+
+                                <p class="map-help-desc">
+                                    Gunakan filter untuk memilih titik Atraksi atau UMKM, lalu klik marker untuk melihat popup ringkas sebelum masuk ke halaman detail.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="map-help-steps">
+
+                            <div class="map-help-step">
+                                <div class="map-help-step-number">01</div>
+                                <div class="map-help-step-text">
+                                    <strong>Pilih kategori</strong>
+                                    <span>Tampilkan semua titik, Atraksi saja, atau UMKM saja.</span>
+                                </div>
+                            </div>
+
+                            <div class="map-help-step">
+                                <div class="map-help-step-number">02</div>
+                                <div class="map-help-step-text">
+                                    <strong>Lihat marker</strong>
+                                    <span>Marker merah untuk Atraksi dan gold untuk UMKM.</span>
+                                </div>
+                            </div>
+
+                            <div class="map-help-step">
+                                <div class="map-help-step-number">03</div>
+                                <div class="map-help-step-text">
+                                    <strong>Klik titik</strong>
+                                    <span>Buka popup ringkas, lalu pilih tombol detail lokasi.</span>
+                                </div>
+                            </div>
+
+                            <div class="map-help-step">
+                                <div class="map-help-step-number">04</div>
+                                <div class="map-help-step-text">
+                                    <strong>Area terkunci</strong>
+                                    <span>Peta tetap fokus di kawasan Odeon Sukabumi.</span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <button type="button" class="map-help-close" id="map-help-close" aria-label="Tutup petunjuk">
+                            <i class="iconoir-xmark"></i>
+                        </button>
+
+                    </div>
+
+                    <div class="map-help-note">
+                        <i class="iconoir-spark-solid"></i>
+                        Petunjuk ini bisa ditutup dan dibuka kembali kapan saja.
+                    </div>
+                </div>
+
+                <div id="home-map"></div>
+            </div>
+
+            <div id="home-map-empty" class="hidden text-center py-16 max-w-sm mx-auto">
+                <div class="w-20 h-20 rounded-3xl bg-brand-accent/8 flex items-center justify-center mx-auto mb-5">
+                    <i class="iconoir-map-pin text-3xl text-brand-accent"></i>
+                </div>
+                <h3 class="font-serif text-2xl font-bold text-brand-text mb-2">
+                    Belum ada titik peta
+                </h3>
+                <p class="text-brand-muted text-sm">
+                    Pastikan data Atraksi dan UMKM sudah memiliki latitude dan longitude.
+                </p>
+            </div>
+
+        </div>
+    </section>
+    
+    <section class="py-20 px-5 sm:px-8 bg-white">
         <div class="max-w-4xl mx-auto">
             <div class="text-center mb-14 reveal">
                 <p class="section-eyebrow mb-2">Informasi Penting</p>
